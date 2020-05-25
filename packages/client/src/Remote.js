@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRemote } from './useRemote';
+import { registerDependencies } from './register';
 
 /**
  * Remote Component.
@@ -20,6 +21,7 @@ import { useRemote } from './useRemote';
  *
  * @param {object} config
  * @param {string} config.url - Remote source
+ * @param {object} [config.dependencies] - Dependencies that the host should share with the remote (any import path declared as peerDependency)
  * @param {string} [config.name] - Component name used for stack traces and visualized in component tree
  * @param {number} [config.timeout] - In case of error, number of milliseconds before retrying to fetch component
  * @param {number} [config.retries] - Number of retries to fetch remote component
@@ -32,6 +34,7 @@ const Remote = ({
   name,
   timeout,
   retries,
+  dependencies = {},
   Loading = () => null,
   Error = () => null,
 }) => {
@@ -41,6 +44,10 @@ const Remote = ({
    */
   const Component = ({ ...props }) => {
     const { data: Component, loading, error } = useRemote(url, { timeout, retries });
+
+    useEffect(() => {
+      registerDependencies(dependencies);
+    }, []);
 
     if (typeof error !== 'undefined') {
       return <Error url={url} error={error} {...props} />;

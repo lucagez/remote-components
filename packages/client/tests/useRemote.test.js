@@ -1,5 +1,4 @@
 import { renderHook, act } from '@testing-library/react-hooks';
-import nock from 'nock';
 import { useRemote } from '../src/useRemote';
 
 import 'systemjs/dist/system';
@@ -12,12 +11,14 @@ const dummyComponent = `
   });
 `;
 
-const scope = nock('https://test.com')
-  .get('/component')
-  .reply(200, dummyComponent);
 
 test('should fetch component', async () => {
-  const { result, waitForNextUpdate } = renderHook(() => useRemote('https://test.com/component'))
+  System.import = (url) =>
+    new Promise((resolve) => setTimeout(() => resolve({ default: dummyComponent }), 10));
+
+  const { result, waitForNextUpdate } = renderHook(() =>
+    useRemote('https://test.com/component'),
+  );
 
   expect(result.current.loading).toBe(true);
   expect(result.current.error).toBe(undefined);
@@ -25,7 +26,68 @@ test('should fetch component', async () => {
 
   await waitForNextUpdate();
 
+  expect(result.current.loading).toBe(undefined);
+  expect(result.current.error).toBe(undefined);
+  expect(result.current.data).toBe(dummyComponent);
+});
+
+test('should return error on network failures', async () => {
+  const error = new Error('ERROR');
+
+  System.import = (url) =>
+    new Promise((_, reject) => setTimeout(() => reject(error), 10));
+
+  const { result, waitForNextUpdate } = renderHook(() =>
+    useRemote('https://test.com/component', {
+      timeout: 100,
+    }),
+  );
+
   expect(result.current.loading).toBe(true);
   expect(result.current.error).toBe(undefined);
   expect(result.current.data).toBe(undefined);
+
+  await waitForNextUpdate();
+
+  expect(result.current.loading).toBe(undefined);
+  expect(result.current.error).toBe(error);
+  expect(result.current.data).toBe(undefined);
+});
+
+test('should retry n times after failure', async () => {
+  const error = new Error('ERROR');
+
+  System.import = (url) =>
+    new Promise((_, reject) => setTimeout(() => reject(error), 10));
+
+  const { result, waitForNextUpdate, rerender } = renderHook(() =>
+    useRemote('https://test.com/component', {
+      timeout: 10,
+      retries: 5,
+    }),
+  );
+
+  expect(result.current.loading).toBe(true);
+  expect(result.current.error).toBe(undefined);
+  expect(result.current.data).toBe(undefined);
+
+  await waitForNextUpdate();
+
+  expect(result.current.error).toBe(error);
+
+  await waitForNextUpdate();
+
+  expect(result.current.error).toBe(error);
+
+  await waitForNextUpdate();
+
+  expect(result.current.error).toBe(error);
+
+  await waitForNextUpdate();
+
+  expect(result.current.error).toBe(error);
+
+  await waitForNextUpdate();
+
+  expect(result.current.error).toBe(error);
 });
