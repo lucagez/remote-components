@@ -1,12 +1,11 @@
 {
-  "name": "@oclif/example-multi-js",
-  "description": "example multi-command CLI built with javascript",
-  "version": "1.10.6",
-  "author": "Jeff Dickey @jdxcode",
+  "name": "@remote-components/cli",
+  "description": "CLI for bootstrapping and serving remote components",
+  "version": "0.0.1",
+  "author": "Luca Gesmundo @lucagez",
   "bin": {
-    "example-multi-js": "./bin/run"
+    "rc-cli": "./bin/run"
   },
-  "bugs": "https://github.com/oclif/example-multi-js/issues",
   "dependencies": {
     "@oclif/command": "^1",
     "@oclif/config": "^1",
@@ -31,10 +30,6 @@
     "/oclif.manifest.json",
     "/src"
   ],
-  "homepage": "https://github.com/oclif/example-multi-js",
-  "keywords": [
-    "oclif"
-  ],
   "license": "MIT",
   "main": "src/index.js",
   "oclif": {
@@ -44,7 +39,6 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "oclif/example-multi-js",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint .",
