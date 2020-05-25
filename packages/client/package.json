@@ -1,6 +1,6 @@
 {
-  "name": "remote-components",
-  "version": "1.0.0",
+  "name": "@remote-components/client",
+  "version": "0.0.1",
   "description": "Remote components module to consume CMS components",
   "main": "dist/remote-components.cjs.js",
   "browser": "dist/remote-components.umd.js",
