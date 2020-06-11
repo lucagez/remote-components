@@ -1,7 +1,7 @@
 {
   "name": "@remote-components/cli",
   "description": "CLI for bootstrapping and serving remote components",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Luca Gesmundo @lucagez",
   "bin": {
     "rc-cli": "./bin/run"
