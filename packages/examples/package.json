@@ -1,6 +1,6 @@
 {
 	"name": "@remote-components/examples",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"publishConfig": {
 		"access": "public"
 	},
@@ -15,7 +15,7 @@
 		"parcel-bundler": "^1.12.4"
 	},
 	"dependencies": {
-		"@remote-components/client": "^0.0.4",
+		"@remote-components/client": "^0.0.5",
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1",
 		"serve": "^11.3.1"
