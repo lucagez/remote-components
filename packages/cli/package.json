@@ -47,5 +47,5 @@
     "test": "nyc mocha --forbid-only \"test/**/*.test.js\"",
     "version": "oclif-dev readme && git add README.md"
   },
-  "gitHead": "6b30017963f40d767a3f5381903208b2d92d329f"
+  "gitHead": "7c2839bff45fe52be3e967d3e768384b2d45699f"
 }
