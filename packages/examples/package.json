@@ -2,8 +2,8 @@
 	"name": "@remote-components/examples",
 	"version": "0.0.4",
 	"publishConfig": {
-    "access": "public"
-  },
+		"access": "public"
+	},
 	"main": "index.js",
 	"author": "Luca Gesmundo",
 	"license": "MIT",
