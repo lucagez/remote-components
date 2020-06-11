@@ -13,7 +13,7 @@ export default {
   input: path.resolve(__dirname, './src/index.js'),
   output: [
     {
-      file: path.resolve(__dirname, `./dist/${pkg.name}.umd.js`),
+      file: path.resolve(__dirname, `./dist/remote.umd.js`),
       format: 'umd',
       name: 'remoteComponents',
       globals: {
@@ -21,11 +21,11 @@ export default {
       },
     },
     {
-      file: path.resolve(__dirname, `./dist/${pkg.name}.cjs.js`),
+      file: path.resolve(__dirname, `./dist/remote.cjs.js`),
       format: 'cjs',
     },
     {
-      file: path.resolve(__dirname, `./dist/${pkg.name}.esm.js`),
+      file: path.resolve(__dirname, `./dist/remote.esm.js`),
       format: 'es',
     },
   ],

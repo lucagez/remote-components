@@ -1,0 +1,8 @@
+{
+  "name": "dummy",
+  "source": "index.js",
+  "main": "dist/dummy.js",
+  "peerDependencies": {
+    "react": "^16.0.0"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "remote",
+  "peerDependencies": {
+    "react": "^16"
+  },
+  "source": "index.js",
+  "main": "dist/remote.js"
+}

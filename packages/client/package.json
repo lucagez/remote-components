@@ -2,9 +2,7 @@
   "name": "@remote-components/client",
   "version": "0.0.1",
   "description": "Remote components module to consume CMS components",
-  "main": "dist/remote-components.cjs.js",
-  "browser": "dist/remote-components.umd.js",
-  "module": "dist/remote-components.esm.js",
+  "main": "dist/remote.cjs.js",
   "author": "Luca Gesmundo",
   "license": "MIT",
   "scripts": {
@@ -25,7 +23,6 @@
     "@testing-library/react-hooks": "^3.2.1",
     "jest": "^26.0.1",
     "nock": "^12.0.3",
-    "react": "^16.13.1",
     "react-test-renderer": "^16.13.1",
     "rollup": "^2.8.2",
     "rollup-plugin-babel": "^4.4.0",
@@ -35,5 +32,10 @@
   },
   "peerDependencies": {
     "react": "^16.8.0"
+  },
+  "workspaces": {
+    "nohoist": [
+      "react"
+    ]
   }
 }

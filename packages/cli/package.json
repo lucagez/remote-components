@@ -9,7 +9,8 @@
   "dependencies": {
     "@oclif/command": "^1",
     "@oclif/config": "^1",
-    "@oclif/plugin-help": "^3"
+    "@oclif/plugin-help": "^3",
+    "fs-extra": "^9.0.0"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
