@@ -1,6 +1,5 @@
 {
-  "name": "root",
-  "private": true,
+  "name": "remote-components",
   "devDependencies": {
     "lerna": "^3.20.2"
   }
