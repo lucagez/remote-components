@@ -1,6 +1,9 @@
 {
   "name": "@remote-components/client",
   "version": "0.0.4",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Remote components module to consume CMS components",
   "main": "dist/remote.cjs.js",
   "author": "Luca Gesmundo",
