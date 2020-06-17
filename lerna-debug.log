@@ -1,6 +1,0 @@
-55 error Error: Command failed: git tag v0.0.4 -m v0.0.4
-55 error fatal: tag 'v0.0.4' already exists
-55 error
-55 error     at makeError (/Users/luca.gesmundo/me/remote-components/node_modules/execa/index.js:174:9)
-55 error     at /Users/luca.gesmundo/me/remote-components/node_modules/execa/index.js:278:16
-55 error     at processTicksAndRejections (internal/process/task_queues.js:97:5)
