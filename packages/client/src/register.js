@@ -1,4 +1,6 @@
 
+const REGISTRY = new Map();
+
 /**
  * registerDependencies.
  * RegisterDependencies provides a sharing layer of dependecies
@@ -15,10 +17,29 @@
  */
 const registerDependencies = (dependencies) => {
   for (const [key, value] of Object.entries(dependencies)) {
-    window.define(key, [], function () {
-      return value;
-    });
+    if (REGISTRY.has(key)) {
+      throw new Error(`Attempting registry override on: ${key}`);
+    }
+
+    REGISTRY.set(key, value);
   }
 };
 
-export { registerDependencies };
+const removeDependency = (dependency) => {
+  REGISTRY.delete(dependency);
+};
+
+/**
+ * require.
+ * 
+ * Global patch to allow CommonJS and UMD imports.
+ * Unfortunately using native import syntax is not
+ * possible in order to keep IE compatibility
+ * 
+ * @param {string} dependency 
+ */
+window.require = (dependency) => {
+  return REGISTRY.get(dependency);
+};
+
+export { registerDependencies, removeDependency };
