@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Remote } from '../dist/remote.esm';
 
 const App = () => {
   return (
