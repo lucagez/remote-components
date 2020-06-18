@@ -49,4 +49,7 @@ export default {
     terser(),
     size(),
   ],
+  watch: {
+    buildDelay: 200,
+  }
 };

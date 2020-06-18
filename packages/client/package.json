@@ -10,6 +10,8 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c ./rollup.config.js",
+    "watch": "rollup -c -w ./rollup.config.js",
+    "dev": "yarn build & parcel ./example/index.html",
     "test:init": "jest --init",
     "test": "jest"
   },
