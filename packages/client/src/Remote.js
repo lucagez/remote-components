@@ -43,7 +43,7 @@ const Remote = ({
    * undefined otherwise
    */
   const Component = ({ ...props }) => {
-    const { data: Component, loading, error } = useRemote(url, { timeout, retries });
+    const { data: Comp, loading, error } = useRemote({ url, name, timeout, retries });
 
     useEffect(() => {
       registerDependencies(dependencies);
@@ -57,7 +57,7 @@ const Remote = ({
       return <Loading url={url} {...props} />;
     }
 
-    return <Component {...props} />;
+    return <Comp {...props} />;
   }
 
   Object.defineProperty(Component, 'name', {

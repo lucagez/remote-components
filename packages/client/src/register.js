@@ -1,19 +1,56 @@
-
 const REGISTRY = new Map();
+const COMPONENTS_REGISTRY = new Map();
+
+const registerComponent = (name, Component) => {
+  return COMPONENTS_REGISTRY.set(name, Component);
+};
+
+const removeComponent = (name) => {
+  return COMPONENTS_REGISTRY.delete(name);
+};
+
+const getComponent = (name) => {
+  return COMPONENTS_REGISTRY.get(name);
+};
+
+window.module = {
+  set exports(value) {
+    registerComponent(value.name, value.Component);
+  },
+};
+
+window.exports = {};
+
+/**
+ * require.
+ *
+ * Global patch to allow CommonJS and UMD imports.
+ * Unfortunately using native import syntax is not
+ * possible in order to keep IE compatibility
+ *
+ * @param {string} dependency
+ */
+window.require = (dependency) => {
+  if (!REGISTRY.has(dependency)) {
+    throw new Error(`Attempting to require '${dependency}' without previous registration.`);
+  }
+
+  return REGISTRY.get(dependency);
+};
 
 /**
  * registerDependencies.
  * RegisterDependencies provides a sharing layer of dependecies
  * from the host app and the remote components.
- * 
+ *
  * usage:
  * ```js
  * registerDependencies({
  *   react: React,
  * });
  * ```
- * 
- * @param {object} dependencies - Dependencies to register in remote components, [key]: value 
+ *
+ * @param {object} dependencies - Dependencies to register in remote components, [key]: value
  */
 const registerDependencies = (dependencies) => {
   for (const [key, value] of Object.entries(dependencies)) {
@@ -25,21 +62,20 @@ const registerDependencies = (dependencies) => {
   }
 };
 
+/**
+ * removeDependency/
+ * Remove a dependency from the main REGISTRY.
+ *
+ * @param {string} dependency
+ */
 const removeDependency = (dependency) => {
   REGISTRY.delete(dependency);
 };
 
-/**
- * require.
- * 
- * Global patch to allow CommonJS and UMD imports.
- * Unfortunately using native import syntax is not
- * possible in order to keep IE compatibility
- * 
- * @param {string} dependency 
- */
-window.require = (dependency) => {
-  return REGISTRY.get(dependency);
+export {
+  registerDependencies,
+  removeDependency,
+  registerComponent,
+  removeComponent,
+  getComponent,
 };
-
-export { registerDependencies, removeDependency };
