@@ -31,28 +31,19 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
   const [retry, setRetry] = useState(retries);
 
   useLayoutEffect(() => {
-    const head = document.querySelector('head');
-    const script = document.createElement('script');
-
-    script.setAttribute('src', url);
-    script.setAttribute('type', 'text/javascript');
-
-    script.addEventListener('load', () => {
-      setData(getComponent(name));
-    });
-
-    script.addEventListener('error', (event) => {
-      setTimeout(() => {
-        if (retry) setRetry(retry - 1);
-        removeComponent(name);
-      }, timeout);
-      
-      head.removeChild(script);
-      setData(new URIError(`Error while loading: ${event.target.src}`));
-    });
-
-
-    head.appendChild(script);
+    fetch(url)
+      .then((res) => res.text())
+      .then((source) => {
+        (0, eval)(source);
+        setData(getComponent(name));
+      })
+      .catch(() => {
+        setTimeout(() => {
+          if (retry) setRetry(retry - 1);
+          removeComponent(name);
+        }, timeout);
+        setData(new URIError(`Error while loading: ${event.target.src}`));
+      });
   }, [retry]);
 
   if (data instanceof Error) {
