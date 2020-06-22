@@ -3,7 +3,7 @@ import { renderHook, act } from '@testing-library/react-hooks';
 import { render } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-// import { useRemote } from '../src/useRemote';
+import { useRemote } from '../src/useRemote';
 
 import 'expect-puppeteer';
 
@@ -15,35 +15,76 @@ import 'expect-puppeteer';
  * - register unit test
  */
 
-// const server = setupServer(
-//   rest.get('http://dummy.com/component.js', (req, res, ctx) => {
-//     return res(
-//       ctx.delay(100),
-//       ctx.status(200),
-//       ctx.text(`
-//         console.log('DUMMY');
-//       `),
+const server = setupServer(
+  rest.get('http://dummy.com/component.js', (req, res, ctx) => {
+    return res(
+      ctx.delay(100),
+      ctx.status(200),
+      ctx.text(`
+        module.exports = {
+          Component: () => console.log('DUMMY'),
+          name: 'dummy',
+        }
+      `),
+    );
+  }),
+);
+
+beforeAll(() => {
+  server.listen();
+});
+
+afterAll(() => {
+  server.close();
+});
+
+// describe('useRemote hook', () => {
+//   // beforeAll(async () => {
+//   //   await page.goto('http://localhost:5000');
+//   // })
+
+//   // it('should display "PAGE" text on page', async () => {
+//   //   await expect(page).toMatch('PAGE');
+//   // })
+
+//   it('mock request', async () => {
+//     const { result, waitForNextUpdate } = renderHook(() =>
+//       useRemote({
+//         url: 'http://dummy.com/component.js',
+//         name: 'dummy',
+//       }),
 //     );
-//   }),
-// );
 
-// beforeAll(() => {
-//   server.listen();
-// });
+//     expect(result.current.loading).toBe(true);
+//     expect(result.current.error).toBe(undefined);
+//     expect(result.current.data).toBe(undefined);
 
-// afterAll(() => {
-//   server.close();
-// });
+//     await waitForNextUpdate();
 
-describe('Google', () => {
-  beforeAll(async () => {
-    await page.goto('http://localhost:5000');
-  })
+//     expect(result.current.loading).toBe(undefined);
+//     expect(result.current.error).toBe(undefined);
+//     expect(result.current.data).toBe(dummyComponent);
+//   });
+// })
 
-  it('should display "google" text on page', async () => {
-    await expect(page).toMatch('PAGE');
-  })
-})
+test('mock request', async () => {
+  const { result, waitForNextUpdate } = renderHook(() =>
+    useRemote({
+      url: 'http://dummy.com/component.js',
+      name: 'dummy',
+    }),
+  );
+
+  expect(result.current.loading).toBe(true);
+  expect(result.current.error).toBe(undefined);
+  expect(result.current.data).toBe(undefined);
+
+  await waitForNextUpdate();
+
+  expect(result.current.loading).toBe(undefined);
+  expect(result.current.error).toBe(undefined);
+  expect(result.current.data.toString()).toBe(`() => console.log('DUMMY')`);
+});
 
 
 // test('mock request', async () => {

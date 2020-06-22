@@ -7,4 +7,5 @@ module.exports = {
   testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
   testPathIgnorePatterns: ['/node_modules/'],
   preset: 'jest-puppeteer',
+  testEnvironment: 'jsdom',
 };

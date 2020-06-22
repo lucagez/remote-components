@@ -47,6 +47,7 @@
   },
   "gitHead": "d8af2b297d187fe24682bea687cec9c1292349bd",
   "dependencies": {
-    "systemjs": "^6.3.2"
+    "systemjs": "^6.3.2",
+    "unfetch": "^4.1.0"
   }
 }
