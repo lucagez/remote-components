@@ -46,7 +46,7 @@ export default {
     }),
     resolve(),
     commonjs(),
-    terser(),
+    // terser(),
     size(),
   ],
 };

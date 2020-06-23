@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import fetch from 'unfetch';
+import { removeComponent, getComponent } from './register';
 
 /**
  * useRemote.
@@ -25,33 +27,43 @@ import { useState, useEffect } from 'react';
  * @param {number} [config.timeout] - Time (ms) between retries on errors when fetching.
  * @param {number} [config.retries] - Number of retries when encountring errors while fetching components.
  */
-const useRemote = (url, { timeout, retries = 1 } = {}) => {
-  const [data, setData] = useState(undefined);
+const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
+  const [data, setData] = useState({ loading: true });
   const [retry, setRetry] = useState(retries);
 
   useEffect(() => {
-    System.import(url)
-      .then(({ default: remote }) => {
-        setData(remote);
+    setData({ loading: true });
+
+    fetch(url)
+      .then((res) => res.text())
+      .then((source) => {
+
+        /**
+         * Indirect eval call. An indirect eval call causes the evaluation
+         * of code to always be executed at global scope.
+         */
+        (0, eval)(source);
+
+        setData({
+          data: getComponent(name),
+        });
       })
-      .catch((error) => {
-        setData(error);
+      .catch(() => {
+        /**
+         * TODO: customize based on error type => parsing error | network error ...
+         */
         setTimeout(() => {
           if (retry) setRetry(retry - 1);
-          System.delete(url);
+          removeComponent(name);
         }, timeout);
+
+        setData({
+          error: new URIError(`Error while loading: ${url}`)
+        });
       });
   }, [retry]);
 
-  if (data instanceof Error) {
-    return { error: data };
-  }
-
-  if (typeof data === 'undefined') {
-    return { loading: true };
-  }
-
-  return { data };
+  return data;
 };
 
 export { useRemote };
