@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-// import fetch from 'unfetch';
 import { removeComponent, getComponent } from './register';
 
 /**
@@ -31,48 +30,58 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
   const [data, setData] = useState({ loading: true });
   const [retry, setRetry] = useState(retries);
 
-  useEffect(() => {
-    setData({ loading: true });
+  const request = new XMLHttpRequest();
 
-    const request = new XMLHttpRequest();
+  request.onreadystatechange = () => {
+    if (request.readyState !== 4) return;
+    if (request.status !== 200) return;
 
-    request.onreadystatechange = () => {
-      if (request.readyState !== 4) return;
-      if (request.status !== 200) return;
-
-      try {
-        /**
-         * Indirect eval call.
-         * This is going to force the evaluation of source
-         * code to happen in global context.
-         */
-        (0, eval)(request.responseText);
-
-        setData({
-          data: getComponent(name),
-        });
-      } catch (error) {
-        /**
-         * Evaluation error
-         */
-        setData({
-          error,
-        });
-      }
-    };
-
-    request.onerror = () => {
-      if (timeout && retries) {
-        setTimeout(() => {
-          if (retry) setRetry(retry - 1);
-          removeComponent(name);
-        }, timeout);
-      }
+    try {
+      /**
+       * Indirect eval call.
+       * This is going to force the evaluation of source
+       * code to happen in global context.
+       */
+      (0, eval)(request.responseText);
 
       setData({
-        error: new URIError(`Error while loading: ${url}`),
+        data: getComponent(name),
       });
-    };
+    } catch (error) {
+      /**
+       * Evaluation error
+       */
+      setData({
+        error,
+      });
+    }
+  };
+
+  request.onerror = () => {
+    if (timeout && retries) {
+      setTimeout(
+        () => {
+          if (retry) setRetry(retry - 1);
+          removeComponent(name);
+        },
+        timeout,
+      );
+    }
+
+    setData({
+      error: new URIError(`Error while loading: ${url}`),
+    });
+  };
+
+  useEffect(() => {
+    const cached = getComponent(name);
+
+    setData({
+      loading: typeof cached === 'undefined',
+      data: cached,
+    });
+
+    if (typeof cached !== 'undefined') return;
 
     request.open('GET', url);
     request.send();
