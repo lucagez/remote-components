@@ -1,3 +1,8 @@
+/**
+ * REGISTRY interfaces.
+ * Used for storing/caching dependencies and already
+ * evaluated components
+ */
 const REGISTRY = new Map();
 const COMPONENTS_REGISTRY = new Map();
 
@@ -13,13 +18,21 @@ const getComponent = (name) => {
   return COMPONENTS_REGISTRY.get(name);
 };
 
+/**
+ * Prefixing module, exports, require.
+ * Necessary to keep interoperability
+ * with other dynamic loaders that are
+ * already polluting the global namespace:
+ * - requirejs
+ * - systemjs
+ * - __webpack_require__ 
+ * - parcelRequire
+ */
 window.module = {
   set exports(value) {
     registerComponent(value.name, value.Component);
   },
 };
-
-window.exports = {};
 
 /**
  * require.

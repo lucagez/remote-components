@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { removeComponent, getComponent } from './register';
+import { remoteImport } from './loader';
 
 /**
  * useRemote.
@@ -30,19 +31,14 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
   const [data, setData] = useState({ loading: true });
   const [retry, setRetry] = useState(retries);
 
-  const request = new XMLHttpRequest();
-
-  request.onreadystatechange = () => {
-    if (request.readyState !== 4) return;
-    if (request.status !== 200) return;
-
+  const onDone = (source) => {
     try {
       /**
        * Indirect eval call.
        * This is going to force the evaluation of source
        * code to happen in global context.
        */
-      (0, eval)(request.responseText);
+      (0, eval)(source);
 
       setData({
         data: getComponent(name),
@@ -57,7 +53,7 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
     }
   };
 
-  request.onerror = () => {
+  const onError = (error) => {
     if (timeout && retries) {
       setTimeout(
         () => {
@@ -69,7 +65,7 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
     }
 
     setData({
-      error: new URIError(`Error while loading ${url}`),
+      error,
     });
   };
 
@@ -83,8 +79,10 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
 
     if (typeof cached !== 'undefined') return;
 
-    request.open('GET', url, true);
-    request.send(null);
+    remoteImport(url, {
+      onDone,
+      onError,
+    })
   }, [retry]);
 
   return data;

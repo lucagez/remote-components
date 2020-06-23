@@ -5,6 +5,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import size from 'rollup-plugin-bundle-size';
 import { terser } from 'rollup-plugin-terser';
+import url from '@rollup/plugin-url';
 
 
 // TODO: Add dev build to keep jsdoc comments
@@ -46,6 +47,9 @@ export default {
     }),
     resolve(),
     commonjs(),
+    url({
+      include: ['**/*.worker.js'],
+    }),
     process.env.NODE_ENV === 'production' && terser(),
     size(),
   ],

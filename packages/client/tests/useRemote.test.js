@@ -6,14 +6,6 @@ import { useRemote } from '../src/useRemote';
 
 import 'expect-puppeteer';
 
-/**
- * Testing strategy:
- * - unit test remote -> mocking useRemote
- * - puppeteer environment for useRemote
- * - puppeteer environment for remote
- * - register unit test
- */
-
 const server = setupServer(
   rest.get('http://dummy.com/component.js', (req, res, ctx) => {
     return res(
@@ -86,7 +78,9 @@ test('should return uri-error on network failures', async () => {
   expect(result.current.error).toBeInstanceOf(URIError);
   expect(result.current.data).toBe(undefined);
 
-  expect(result.current.error.toString()).toBe(`URIError: Error while loading http://nocomponent.com/nothing.js`);
+  expect(result.current.error.toString()).toBe(
+    `URIError: Error while loading http://nocomponent.com/nothing.js`,
+  );
 });
 
 test('should return evaluation-error on parsing failures', async () => {
@@ -100,7 +94,9 @@ test('should return evaluation-error on parsing failures', async () => {
   await waitForNextUpdate();
 
   expect(result.current.error).toBeInstanceOf(Error);
-  expect(result.current.error.toString()).toBe(`SyntaxError: Unexpected token ':'`);
+  expect(result.current.error.toString()).toBe(
+    `SyntaxError: Unexpected token ':'`,
+  );
 });
 
 test('should retry n times after failure', async () => {
@@ -122,18 +118,18 @@ test('should retry n times after failure', async () => {
   expect(result.current.error).toBeInstanceOf(URIError);
 
   await waitForNextUpdate();
-  
+
   expect(result.current.loading).toBe(true);
 
   await waitForNextUpdate();
-  
+
   expect(result.current.error).toBeInstanceOf(URIError);
 
   await waitForNextUpdate();
-  
+
   expect(result.current.loading).toBe(true);
 
   await waitForNextUpdate();
-  
+
   expect(result.current.error).toBeInstanceOf(URIError);
 });
