@@ -103,35 +103,37 @@ test('should return evaluation-error on parsing failures', async () => {
   expect(result.current.error.toString()).toBe(`SyntaxError: Unexpected token ':'`);
 });
 
-// test('should retry n times after failure', async () => {
-//   const { result, waitForNextUpdate } = renderHook(() =>
-//     useRemote('http://nocomponent.com/nothing.js', {
-//       timeout: 10,
-//       retries: 5,
-//     }),
-//   );
+test('should retry n times after failure', async () => {
+  const { result, waitForNextUpdate } = renderHook(() =>
+    useRemote({
+      url: 'http://nocomponent.com/nothing.js',
+      name: 'nothing',
+      timeout: 10,
+      retries: 2,
+    }),
+  );
 
-//   expect(result.current.loading).toBe(true);
-//   expect(result.current.error).toBe(undefined);
-//   expect(result.current.data).toBe(undefined);
+  expect(result.current.loading).toBe(true);
+  expect(result.current.error).toBe(undefined);
+  expect(result.current.data).toBe(undefined);
 
-//   await waitForNextUpdate();
+  await waitForNextUpdate();
 
-//   expect(result.current.error).toBeInstanceOf(Error);
+  expect(result.current.error).toBeInstanceOf(URIError);
 
-//   await waitForNextUpdate();
+  await waitForNextUpdate();
+  
+  expect(result.current.loading).toBe(true);
 
-//   expect(result.current.error).toBeInstanceOf(Error);
+  await waitForNextUpdate();
+  
+  expect(result.current.error).toBeInstanceOf(URIError);
 
-//   await waitForNextUpdate();
+  await waitForNextUpdate();
+  
+  expect(result.current.loading).toBe(true);
 
-//   expect(result.current.error).toBeInstanceOf(Error);
-
-//   await waitForNextUpdate();
-
-//   expect(result.current.error).toBeInstanceOf(Error);
-
-//   await waitForNextUpdate();
-
-//   expect(result.current.error).toBeInstanceOf(Error);
-// });
+  await waitForNextUpdate();
+  
+  expect(result.current.error).toBeInstanceOf(URIError);
+});
