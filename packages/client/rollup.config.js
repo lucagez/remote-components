@@ -46,7 +46,7 @@ export default {
     }),
     resolve(),
     commonjs(),
-    // terser(),
+    process.env.NODE_ENV === 'production' && terser(),
     size(),
   ],
 };

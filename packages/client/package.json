@@ -9,7 +9,7 @@
   "author": "Luca Gesmundo",
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c ./rollup.config.js",
+    "build": "NODE_ENV=production rollup -c ./rollup.config.js",
     "watch": "rollup -c -w ./rollup.config.js",
     "example": "parcel ./example/index.html",
     "dev": "run-p watch example",
@@ -47,7 +47,6 @@
   },
   "gitHead": "d8af2b297d187fe24682bea687cec9c1292349bd",
   "dependencies": {
-    "systemjs": "^6.3.2",
     "unfetch": "^4.1.0"
   }
 }

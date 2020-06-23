@@ -1,23 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import { useRemote } from './useRemote';
 import { registerDependencies } from './register';
 
 /**
  * Remote Component.
  * Load a React component from a remote source.
- * 
+ *
  * Configuration:
  * ```js
  * const Component = Remote({
  *  url: 'remote.url.com/component.js',
  * });
  * ```
- * 
+ *
  * Usage:
  * ```jsx
  * // You can forward any props to the underlying component
  * <Component {...props} />
- * ``` 
+ * ```
  *
  * @param {object} config
  * @param {string} config.url - Remote source
@@ -35,30 +36,51 @@ const Remote = ({
   timeout,
   retries,
   dependencies = {},
-  Loading = () => null,
-  Error = () => null,
+  Loading: LoadingComp = () => null,
+  Error: ErrorComp = () => null,
 }) => {
   /**
    * Reference the HOC in order to override its name,
    * undefined otherwise
    */
-  const Component = ({ ...props }) => {
-    const { data: Comp, loading, error } = useRemote({ url, name, timeout, retries });
+  const Component = (props) => {
+    const { data: Comp, loading, error } = useRemote({
+      url,
+      name,
+      timeout,
+      retries,
+    });
+    const ref = useRef(null);
 
-    useEffect(() => {
-      registerDependencies(dependencies);
-    }, []);
+    const render = (Component) => {
+      ReactDOM.render(
+        React.createElement(Component, {
+          ...props,
+          url,
+          error,
+        }),
+        ref.current,
+      );
+    };
 
-    if (typeof error !== 'undefined') {
-      return <Error url={url} error={error} {...props} />;
-    }
+    useLayoutEffect(() => {
+      if (typeof loading !== 'undefined') {
+        render(LoadingComp);
+      }
 
-    if (typeof loading !== 'undefined') {
-      return <Loading url={url} {...props} />;
-    }
+      if (typeof error !== 'undefined') {
+        render(ErrorComp);
+      }
 
-    return <Comp {...props} />;
-  }
+      if (typeof Comp !== 'undefined') {
+        render(Comp);
+      }
+    }, [Comp, loading, error]);
+
+    return <div ref={ref} />;
+  };
+
+  registerDependencies(dependencies);
 
   Object.defineProperty(Component, 'name', {
     value: name,
