@@ -40,11 +40,25 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
       if (request.readyState !== 4) return;
       if (request.status !== 200) return;
 
-      (0, eval)(request.responseText);
+      try {
+        /**
+         * Indirect eval call.
+         * This is going to force the evaluation of source
+         * code to happen in global context.
+         */
+        (0, eval)(request.responseText);
 
-      setData({
-        data: getComponent(name),
-      });
+        setData({
+          data: getComponent(name),
+        });
+      } catch (error) {
+        /**
+         * Evaluation error
+         */
+        setData({
+          error,
+        });
+      }
     };
 
     request.onerror = () => {
