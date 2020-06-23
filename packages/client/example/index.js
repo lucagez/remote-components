@@ -11,6 +11,7 @@ registerDependencies({
 const Gooey = Remote({
   name: 'dummy',
   url: 'http://localhost:5000/dummy/dist/dummy.js',
+  Error: ({ error }) => <h1>{error.toString()}</h1> 
 });
 
 const App = () => {

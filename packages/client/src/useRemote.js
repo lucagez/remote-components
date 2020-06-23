@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import fetch from 'unfetch';
+// import fetch from 'unfetch';
 import { removeComponent, getComponent } from './register';
 
 /**
@@ -34,33 +34,34 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
   useEffect(() => {
     setData({ loading: true });
 
-    fetch(url)
-      .then((res) => res.text())
-      .then((source) => {
+    const request = new XMLHttpRequest();
 
-        /**
-         * Indirect eval call. An indirect eval call causes the evaluation
-         * of code to always be executed at global scope.
-         */
-        (0, eval)(source);
+    request.onreadystatechange = () => {
+      if (request.readyState !== 4) return;
+      if (request.status !== 200) return;
 
-        setData({
-          data: getComponent(name),
-        });
-      })
-      .catch(() => {
-        /**
-         * TODO: customize based on error type => parsing error | network error ...
-         */
+      (0, eval)(request.responseText);
+
+      setData({
+        data: getComponent(name),
+      });
+    };
+
+    request.onerror = () => {
+      if (timeout && retries) {
         setTimeout(() => {
           if (retry) setRetry(retry - 1);
           removeComponent(name);
         }, timeout);
+      }
 
-        setData({
-          error: new URIError(`Error while loading: ${url}`)
-        });
+      setData({
+        error: new URIError(`Error while loading: ${url}`),
       });
+    };
+
+    request.open('GET', url);
+    request.send();
   }, [retry]);
 
   return data;
