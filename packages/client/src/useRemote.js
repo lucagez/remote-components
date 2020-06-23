@@ -69,7 +69,7 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
     }
 
     setData({
-      error: new URIError(`Error while loading: ${url}`),
+      error: new URIError(`Error while loading ${url}`),
     });
   };
 
@@ -83,8 +83,8 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
 
     if (typeof cached !== 'undefined') return;
 
-    request.open('GET', url);
-    request.send();
+    request.open('GET', url, true);
+    request.send(null);
   }, [retry]);
 
   return data;

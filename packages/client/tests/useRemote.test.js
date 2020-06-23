@@ -27,6 +27,18 @@ const server = setupServer(
       `),
     );
   }),
+  rest.get('http://dummy.com/wrong.js', (req, res, ctx) => {
+    return res(
+      ctx.delay(100),
+      ctx.status(200),
+      ctx.text(`
+        module.exports =
+          Component: () => console.log('DUMMY'),
+          name: 'wrong',
+        }
+      `),
+    );
+  }),
 );
 
 beforeAll(() => {
@@ -56,10 +68,11 @@ test('Should fetch and evaluate source', async () => {
   expect(result.current.data.toString()).toBe(`() => console.log('DUMMY')`);
 });
 
-test('should return error on network failures', async () => {
+test('should return uri-error on network failures', async () => {
   const { result, waitForNextUpdate } = renderHook(() =>
-    useRemote('http://nocomponent.com/nothing.js', {
-      timeout: 100,
+    useRemote({
+      name: 'nocomp',
+      url: 'http://nocomponent.com/nothing.js',
     }),
   );
 
@@ -70,8 +83,24 @@ test('should return error on network failures', async () => {
   await waitForNextUpdate();
 
   expect(result.current.loading).toBe(undefined);
-  expect(result.current.error).toBeInstanceOf(Error);
+  expect(result.current.error).toBeInstanceOf(URIError);
   expect(result.current.data).toBe(undefined);
+
+  expect(result.current.error.toString()).toBe(`URIError: Error while loading http://nocomponent.com/nothing.js`);
+});
+
+test('should return evaluation-error on parsing failures', async () => {
+  const { result, waitForNextUpdate } = renderHook(() =>
+    useRemote({
+      name: 'wrong',
+      url: 'http://dummy.com/wrong.js',
+    }),
+  );
+
+  await waitForNextUpdate();
+
+  expect(result.current.error).toBeInstanceOf(Error);
+  expect(result.current.error.toString()).toBe(`SyntaxError: Unexpected token ':'`);
 });
 
 // test('should retry n times after failure', async () => {
