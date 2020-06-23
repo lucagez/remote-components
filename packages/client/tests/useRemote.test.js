@@ -1,6 +1,5 @@
-import React, { useLayoutEffect } from 'react';
-import { renderHook, act } from '@testing-library/react-hooks';
-import { render } from '@testing-library/react';
+import React from 'react';
+import { renderHook } from '@testing-library/react-hooks';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { useRemote } from '../src/useRemote';
@@ -38,36 +37,7 @@ afterAll(() => {
   server.close();
 });
 
-// describe('useRemote hook', () => {
-//   // beforeAll(async () => {
-//   //   await page.goto('http://localhost:5000');
-//   // })
-
-//   // it('should display "PAGE" text on page', async () => {
-//   //   await expect(page).toMatch('PAGE');
-//   // })
-
-//   it('mock request', async () => {
-//     const { result, waitForNextUpdate } = renderHook(() =>
-//       useRemote({
-//         url: 'http://dummy.com/component.js',
-//         name: 'dummy',
-//       }),
-//     );
-
-//     expect(result.current.loading).toBe(true);
-//     expect(result.current.error).toBe(undefined);
-//     expect(result.current.data).toBe(undefined);
-
-//     await waitForNextUpdate();
-
-//     expect(result.current.loading).toBe(undefined);
-//     expect(result.current.error).toBe(undefined);
-//     expect(result.current.data).toBe(dummyComponent);
-//   });
-// })
-
-test('mock request', async () => {
+test('Should fetch and evaluate source', async () => {
   const { result, waitForNextUpdate } = renderHook(() =>
     useRemote({
       url: 'http://dummy.com/component.js',
@@ -86,84 +56,27 @@ test('mock request', async () => {
   expect(result.current.data.toString()).toBe(`() => console.log('DUMMY')`);
 });
 
+test('should return error on network failures', async () => {
+  const { result, waitForNextUpdate } = renderHook(() =>
+    useRemote('http://nocomponent.com/nothing.js', {
+      timeout: 100,
+    }),
+  );
 
-// test('mock request', async () => {
-//   await page.goto('tests/index.html');
+  expect(result.current.loading).toBe(true);
+  expect(result.current.error).toBe(undefined);
+  expect(result.current.data).toBe(undefined);
 
-//   const { result, waitForNextUpdate } = renderHook(() =>
-//     useRemote({
-//       url: 'http://dummy.com/component.js',
-//       name: 'dummy',
-//     }),
-//   );
+  await waitForNextUpdate();
 
-//   expect(result.current.loading).toBe(true);
-//   expect(result.current.error).toBe(undefined);
-//   expect(result.current.data).toBe(undefined);
-
-//   await waitForNextUpdate();
-
-//   // expect(result.current.loading).toBe(undefined);
-//   // expect(result.current.error).toBe(undefined);
-//   // expect(result.current.data).toBe(dummyComponent);
-// });
-
-// const dummyComponent = `
-//   define([], function() {
-//     return () => "TEST COMPONENT";
-//   });
-// `;
-
-// test('should fetch component', async () => {
-//   System.import = (url) =>
-//     new Promise((resolve) => setTimeout(() => resolve({ default: dummyComponent }), 10));
-
-//   const { result, waitForNextUpdate } = renderHook(() =>
-//     useRemote('https://test.com/component'),
-//   );
-
-//   expect(result.current.loading).toBe(true);
-//   expect(result.current.error).toBe(undefined);
-//   expect(result.current.data).toBe(undefined);
-
-//   await waitForNextUpdate();
-
-//   expect(result.current.loading).toBe(undefined);
-//   expect(result.current.error).toBe(undefined);
-//   expect(result.current.data).toBe(dummyComponent);
-// });
-
-// test('should return error on network failures', async () => {
-//   const error = new Error('ERROR');
-
-//   System.import = (url) =>
-//     new Promise((_, reject) => setTimeout(() => reject(error), 10));
-
-//   const { result, waitForNextUpdate } = renderHook(() =>
-//     useRemote('https://test.com/component', {
-//       timeout: 100,
-//     }),
-//   );
-
-//   expect(result.current.loading).toBe(true);
-//   expect(result.current.error).toBe(undefined);
-//   expect(result.current.data).toBe(undefined);
-
-//   await waitForNextUpdate();
-
-//   expect(result.current.loading).toBe(undefined);
-//   expect(result.current.error).toBe(error);
-//   expect(result.current.data).toBe(undefined);
-// });
+  expect(result.current.loading).toBe(undefined);
+  expect(result.current.error).toBeInstanceOf(Error);
+  expect(result.current.data).toBe(undefined);
+});
 
 // test('should retry n times after failure', async () => {
-//   const error = new Error('ERROR');
-
-//   System.import = (url) =>
-//     new Promise((_, reject) => setTimeout(() => reject(error), 10));
-
-//   const { result, waitForNextUpdate, rerender } = renderHook(() =>
-//     useRemote('https://test.com/component', {
+//   const { result, waitForNextUpdate } = renderHook(() =>
+//     useRemote('http://nocomponent.com/nothing.js', {
 //       timeout: 10,
 //       retries: 5,
 //     }),
@@ -175,21 +88,21 @@ test('mock request', async () => {
 
 //   await waitForNextUpdate();
 
-//   expect(result.current.error).toBe(error);
+//   expect(result.current.error).toBeInstanceOf(Error);
 
 //   await waitForNextUpdate();
 
-//   expect(result.current.error).toBe(error);
+//   expect(result.current.error).toBeInstanceOf(Error);
 
 //   await waitForNextUpdate();
 
-//   expect(result.current.error).toBe(error);
+//   expect(result.current.error).toBeInstanceOf(Error);
 
 //   await waitForNextUpdate();
 
-//   expect(result.current.error).toBe(error);
+//   expect(result.current.error).toBeInstanceOf(Error);
 
 //   await waitForNextUpdate();
 
-//   expect(result.current.error).toBe(error);
+//   expect(result.current.error).toBeInstanceOf(Error);
 // });
