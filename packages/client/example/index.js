@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'requirejs/require';
+
 import { Remote, registerDependencies } from '../dist/remote.esm';
 
 registerDependencies({
@@ -15,7 +17,7 @@ const App = () => {
   return (
     <>
       <h1>App</h1>
-      <Gooey />
+      <Gooey description={'ciao'} />
     </>
   );
 };

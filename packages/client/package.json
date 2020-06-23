@@ -34,6 +34,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-test-renderer": "^16.13.1",
+    "requirejs": "^2.3.6",
     "rollup": "^2.8.2",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-bundle-size": "^1.0.3",

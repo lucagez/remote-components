@@ -5,7 +5,6 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import size from 'rollup-plugin-bundle-size';
 import { terser } from 'rollup-plugin-terser';
-import pkg from './package.json';
 
 
 // TODO: Add dev build to keep jsdoc comments
@@ -18,6 +17,7 @@ export default {
       name: 'remoteComponents',
       globals: {
         react: 'React',
+        'react-dom': 'ReactDOM',
       },
     },
     {
