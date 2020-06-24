@@ -17,7 +17,6 @@ export const swrImport = async (url, { onError, onDone }) => {
     if (!navigator.onLine) return;
 
     window.requestIdleCallback(async () => {
-      console.log('IDLE')
       const request = new Request(url);
       const response = await fetch(request);
   
