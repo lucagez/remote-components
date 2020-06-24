@@ -1,6 +1,9 @@
-import { workerImport } from './worker';
+import { swrImport } from './swr';
 import { legacyImport } from './legacy';
 
-export const remoteImport = window.Worker
-  ? workerImport
+/**
+ * TODO: switch based on config
+ */
+export const remoteImport = window.Cache
+  ? swrImport
   : legacyImport;

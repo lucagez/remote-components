@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom';
 
 import 'systemjs/dist/system';
 
-import { Remote, registerDependencies, remoteImport } from '../dist/remote.esm';
+import { Remote, registerDependencies, remoteImport } from '../dist/remote.cjs';
 import 'systemjs/dist/extras/amd';
 import 'systemjs/dist/extras/named-register';
 
@@ -70,28 +70,28 @@ const versions = [
 //   })
 // }
 
-let c_xhr = 0;
-console.time('XHR');
-for (const version of versions) {
-  const request = new XMLHttpRequest();
+// let c_xhr = 0;
+// console.time('XHR');
+// for (const version of versions) {
+//   const request = new XMLHttpRequest();
 
-  request.onreadystatechange = () => {
-    if (request.readyState !== 4) return;
-    if (request.status !== 200) return;
+//   request.onreadystatechange = () => {
+//     if (request.readyState !== 4) return;
+//     if (request.status !== 200) return;
 
-    if (c_xhr >= versions.length - 1) {
-      console.timeEnd('XHR');
-    }
+//     if (c_xhr >= versions.length - 1) {
+//       console.timeEnd('XHR');
+//     }
 
-    c_xhr++;
-    // eval(request.responseText);
-  };
+//     c_xhr++;
+//     // eval(request.responseText);
+//   };
 
-  request.onerror = () => {};
+//   request.onerror = () => {};
 
-  request.open('GET', version, true);
-  request.send(null);
-}
+//   request.open('GET', version, true);
+//   request.send(null);
+// }
 
 const Gooey = Remote({
   name: 'dummy',

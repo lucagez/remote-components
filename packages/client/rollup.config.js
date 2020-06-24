@@ -39,7 +39,7 @@ export default {
       presets: [
         ['@babel/env', {
           'targets': {
-            'ie': '11'
+            'ie': '11',
           }
         }],
         '@babel/preset-react',
