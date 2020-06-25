@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { removeComponent, getComponent, _module, _exports, _require } from './register';
+import { removeComponent, getComponent } from './register';
 import { remoteImport } from './loader';
 import { contextify } from './contextify';
 
