@@ -15,9 +15,9 @@ import 'systemjs/dist/extras/amd';
 import 'systemjs/dist/extras/named-register';
 
 
-// System.import('http://localhost:5000/dummy/dist/dummy.umd.js').then(res => {
-//   console.log('SYSTEM:', res);
-// })
+System.import('https://unpkg.com/moment@2.27.0/moment.js').then(res => {
+  console.log('SYSTEM:', res.default());
+})
 
 registerDependencies({
   'react': React,
@@ -95,7 +95,7 @@ const versions = [
 
 const Gooey = Remote({
   name: 'dummy',
-  url: 'http://localhost:5000/dummy/dist/dummy.js',
+  url: 'http://localhost:5000/dummy/dist/dummy.umd.js',
   Error: ({ error }) => <h1>{error.toString()}</h1>,
   timeout: 2000,
   retries: 10,

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { removeComponent, getComponent } from './register';
+import { removeComponent, getComponent, _module, _exports, _require } from './register';
 import { remoteImport } from './loader';
+import { contextify } from './contextify';
 
 /**
  * useRemote.
@@ -8,7 +9,7 @@ import { remoteImport } from './loader';
  *
  * usage:
  * ```jsx
- * const { data: Component, loading, error } = useRemote('remote.source.com/component.js');
+ * const { data: Component, loading, error } = useRemote({ url: 'remote.source.com/component.js' });
  *
  * if (loading) {
  *  return <p>Loading...</p>
@@ -22,12 +23,12 @@ import { remoteImport } from './loader';
  *
  * ```
  *
- * @param {string} url - URL of the remote component
  * @param {object} config
+ * @param {string} config.url - URL of the remote component
  * @param {number} [config.timeout] - Time (ms) between retries on errors when fetching.
  * @param {number} [config.retries] - Number of retries when encountring errors while fetching components.
  */
-const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
+const useRemote = ({ url, timeout, retries = 1 } = {}) => {
   const [data, setData] = useState({ loading: true });
   const [retry, setRetry] = useState(retries);
 
@@ -35,13 +36,13 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
     try {
       /**
        * Indirect eval call.
-       * This is going to force the evaluation of source
-       * code to happen in global context.
+       * Evaluating source in a mocked context.
+       * Providing ad-hoc module, exports and require objects.
        */
-      (0, eval)(source);
+      contextify(url, source);
 
       setData({
-        data: getComponent(name),
+        data: getComponent(url),
       });
     } catch (error) {
       /**
@@ -58,7 +59,7 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
       setTimeout(
         () => {
           if (retry) setRetry(retry - 1);
-          removeComponent(name);
+          removeComponent(url);
         },
         timeout,
       );
@@ -70,7 +71,7 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
   };
 
   useEffect(() => {
-    const cached = getComponent(name);
+    const cached = getComponent(url);
 
     setData({
       loading: typeof cached === 'undefined',
@@ -82,7 +83,7 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
     remoteImport(url, {
       onDone,
       onError,
-    })
+    });
   }, [retry]);
 
   return data;
