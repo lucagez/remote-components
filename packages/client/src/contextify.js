@@ -10,14 +10,18 @@ import { registerComponent, getDependency, hasDependency } from './register';
  * - __webpack_require__ 
  * - parcelRequire
  */
-const _module = (resolution) => ({
-  get exports() {
-    return { resolution };
-  },
-  set exports(value) {
-    registerComponent(resolution, value);
-  },
-});
+const _module = (resolution, _exports = {}) => {
+  registerComponent(resolution, _exports);
+
+  return {
+    get exports() {
+      return _exports;
+    },
+    set exports(value) {
+      this.exports.default = value;
+    },
+  };
+};
 
 /**
  * require.

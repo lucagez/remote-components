@@ -44,12 +44,13 @@ const Remote = ({
    * undefined otherwise
    */
   const Component = (props) => {
-    const { data: Comp, loading, error } = useRemote({
+    const { data = {}, loading, error } = useRemote({
       url,
       timeout,
       retries,
     });
     const ref = useRef(null);
+    const { default: Comp } = data;
 
     const render = (Component) => {
       ReactDOM.render(

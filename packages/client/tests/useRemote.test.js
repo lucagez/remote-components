@@ -57,7 +57,7 @@ test('Should fetch and evaluate source', async () => {
 
   expect(result.current.loading).toBe(undefined);
   expect(result.current.error).toBe(undefined);
-  expect(result.current.data.Component.toString()).toBe(`() => console.log('DUMMY')`);
+  expect(result.current.data.default.Component.toString()).toBe(`() => console.log('DUMMY')`);
 });
 
 test('should return uri-error on network failures', async () => {

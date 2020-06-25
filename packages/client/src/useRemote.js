@@ -71,14 +71,14 @@ const useRemote = ({ url, timeout, retries = 1 } = {}) => {
   };
 
   useEffect(() => {
-    const cached = getComponent(url);
+    const registered = getComponent(url);
 
     setData({
-      loading: typeof cached === 'undefined',
-      data: cached,
+      loading: typeof registered === 'undefined',
+      data: registered,
     });
 
-    if (typeof cached !== 'undefined') return;
+    if (typeof registered !== 'undefined') return;
 
     remoteImport(url, {
       onDone,
