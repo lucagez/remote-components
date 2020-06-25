@@ -19,39 +19,6 @@ const getComponent = (name) => {
 };
 
 /**
- * Prefixing module, exports, require.
- * Necessary to keep interoperability
- * with other dynamic loaders that are
- * already polluting the global namespace:
- * - requirejs
- * - systemjs
- * - __webpack_require__ 
- * - parcelRequire
- */
-window.module = {
-  set exports(value) {
-    registerComponent(value.name, value.Component);
-  },
-};
-
-/**
- * require.
- *
- * Global patch to allow CommonJS and UMD imports.
- * Unfortunately using native import syntax is not
- * possible in order to keep IE compatibility
- *
- * @param {string} dependency
- */
-window.require = (dependency) => {
-  if (!REGISTRY.has(dependency)) {
-    throw new Error(`Attempting to require '${dependency}' without previous registration.`);
-  }
-
-  return REGISTRY.get(dependency);
-};
-
-/**
  * registerDependencies.
  * RegisterDependencies provides a sharing layer of dependecies
  * from the host app and the remote components.
@@ -82,12 +49,22 @@ const registerDependencies = (dependencies) => {
  * @param {string} dependency
  */
 const removeDependency = (dependency) => {
-  REGISTRY.delete(dependency);
+  return REGISTRY.delete(dependency);
+};
+
+const hasDependency = (dependency) => {
+  return REGISTRY.has(dependency);
+};
+
+const getDependency = (dependency) => {
+  return REGISTRY.get(dependency);
 };
 
 export {
   registerDependencies,
   removeDependency,
+  getDependency,
+  hasDependency,
   registerComponent,
   removeComponent,
   getComponent,

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { removeComponent, getComponent } from './register';
+import { removeComponent, getComponent, _module, _exports, _require } from './register';
 import { remoteImport } from './loader';
+import { contextify } from './contextify';
 
 /**
  * useRemote.
@@ -35,10 +36,10 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
     try {
       /**
        * Indirect eval call.
-       * This is going to force the evaluation of source
-       * code to happen in global context.
+       * Evaluating source in a mocked context.
+       * Providing ad-hoc module, exports and require objects.
        */
-      (0, eval)(source);
+      contextify(source);
 
       setData({
         data: getComponent(name),
@@ -82,7 +83,7 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
     remoteImport(url, {
       onDone,
       onError,
-    })
+    });
   }, [retry]);
 
   return data;
