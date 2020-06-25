@@ -9,7 +9,7 @@ import { contextify } from './contextify';
  *
  * usage:
  * ```jsx
- * const { data: Component, loading, error } = useRemote('remote.source.com/component.js');
+ * const { data: Component, loading, error } = useRemote({ url: 'remote.source.com/component.js' });
  *
  * if (loading) {
  *  return <p>Loading...</p>
@@ -23,12 +23,12 @@ import { contextify } from './contextify';
  *
  * ```
  *
- * @param {string} url - URL of the remote component
  * @param {object} config
+ * @param {string} config.url - URL of the remote component
  * @param {number} [config.timeout] - Time (ms) between retries on errors when fetching.
  * @param {number} [config.retries] - Number of retries when encountring errors while fetching components.
  */
-const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
+const useRemote = ({ url, timeout, retries = 1 } = {}) => {
   const [data, setData] = useState({ loading: true });
   const [retry, setRetry] = useState(retries);
 
@@ -39,10 +39,10 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
        * Evaluating source in a mocked context.
        * Providing ad-hoc module, exports and require objects.
        */
-      contextify(source);
+      contextify(url, source);
 
       setData({
-        data: getComponent(name),
+        data: getComponent(url),
       });
     } catch (error) {
       /**
@@ -59,7 +59,7 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
       setTimeout(
         () => {
           if (retry) setRetry(retry - 1);
-          removeComponent(name);
+          removeComponent(url);
         },
         timeout,
       );
@@ -71,7 +71,7 @@ const useRemote = ({ name, url, timeout, retries = 1 } = {}) => {
   };
 
   useEffect(() => {
-    const cached = getComponent(name);
+    const cached = getComponent(url);
 
     setData({
       loading: typeof cached === 'undefined',

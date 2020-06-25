@@ -46,7 +46,6 @@ const Remote = ({
   const Component = (props) => {
     const { data: Comp, loading, error } = useRemote({
       url,
-      name,
       timeout,
       retries,
     });

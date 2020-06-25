@@ -10,16 +10,14 @@ import { registerComponent, getDependency, hasDependency } from './register';
  * - __webpack_require__ 
  * - parcelRequire
  */
-const _module = {
+const _module = (resolution) => ({
   get exports() {
-    return {};
+    return { resolution };
   },
   set exports(value) {
-    registerComponent(value.name, value.Component);
+    registerComponent(resolution, value);
   },
-};
-
-const _exports = _module.exports;
+});
 
 /**
  * require.
@@ -53,12 +51,14 @@ const _require = (dependency) => {
  * variables in the `window` object and avoid breaking
  * compatibility with standard js formats (CommonJS and UMD).
  */
-const contextify = (source) => {
+const contextify = (resolution, source) => {
+  const contextifiedModule = _module(resolution);
+
   (new Function('module', 'exports', 'require', source))(
-    _module,
-    _exports,
+    contextifiedModule,
+    contextifiedModule.exports,
     _require,
-  )
+  );
 };
 
 export {
