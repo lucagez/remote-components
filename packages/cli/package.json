@@ -1,7 +1,7 @@
 {
   "name": "@remote-components/cli",
   "description": "CLI for bootstrapping and serving remote components",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "publishConfig": {
     "access": "public"
   },
