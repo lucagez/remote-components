@@ -31,6 +31,15 @@ const server = setupServer(
       `),
     );
   }),
+  rest.get('http://nocomponent.com/nothing.js', (req, res, ctx) => {
+    return res(
+      ctx.delay(100),
+      ctx.status(404),
+      ctx.json({
+        errorMessage: 'No component',
+      }),
+    );
+  }),
 );
 
 beforeAll(() => {

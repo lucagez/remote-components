@@ -1,14 +1,17 @@
 export const legacyImport = (url, { onError, onDone }) => {
   const request = new XMLHttpRequest();
+  const error = new URIError(`Error while loading ${url}`);
 
   request.onreadystatechange = () => {
     if (request.readyState !== 4) return;
-    if (request.status !== 200) return;
-
-    onDone(request.responseText);
+    if (request.status === 200) {
+      onDone(request.responseText);
+    } else {
+      onError(error);
+    }
   };
 
-  request.onerror = () => onError(new URIError(`Error while loading ${url}`));
+  request.onerror = () => onError(error);
 
   request.open('GET', url, true);
   request.send(null);
