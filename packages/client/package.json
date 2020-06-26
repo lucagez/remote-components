@@ -53,8 +53,5 @@
     "react": "^16.8.0",
     "react-dom": "^16.8.0"
   },
-  "gitHead": "d8af2b297d187fe24682bea687cec9c1292349bd",
-  "dependencies": {
-    "regenerator-runtime": "^0.13.5"
-  }
+  "gitHead": "d8af2b297d187fe24682bea687cec9c1292349bd"
 }
