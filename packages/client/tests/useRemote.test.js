@@ -51,11 +51,13 @@ afterAll(() => {
 });
 
 test('Should fetch and evaluate source', async () => {
+  const useDummy = useRemote({
+    url: 'http://dummy.com/component.js',
+    name: 'dummy',
+  });
+
   const { result, waitForNextUpdate } = renderHook(() =>
-    useRemote({
-      url: 'http://dummy.com/component.js',
-      name: 'dummy',
-    }),
+    useDummy(),
   );
 
   expect(result.current.loading).toBe(true);
@@ -70,11 +72,12 @@ test('Should fetch and evaluate source', async () => {
 });
 
 test('should return uri-error on network failures', async () => {
+  const useNothing = useRemote({
+    name: 'nocomp',
+    url: 'http://nocomponent.com/nothing.js',
+  });
   const { result, waitForNextUpdate } = renderHook(() =>
-    useRemote({
-      name: 'nocomp',
-      url: 'http://nocomponent.com/nothing.js',
-    }),
+    useNothing(),
   );
 
   expect(result.current.loading).toBe(true);
@@ -93,11 +96,13 @@ test('should return uri-error on network failures', async () => {
 });
 
 test('should return evaluation-error on parsing failures', async () => {
+  const useWrong = useRemote({
+    name: 'wrong',
+    url: 'http://dummy.com/wrong.js',
+  });
+  
   const { result, waitForNextUpdate } = renderHook(() =>
-    useRemote({
-      name: 'wrong',
-      url: 'http://dummy.com/wrong.js',
-    }),
+    useWrong(),
   );
 
   await waitForNextUpdate();
@@ -109,13 +114,15 @@ test('should return evaluation-error on parsing failures', async () => {
 });
 
 test('should retry n times after failure', async () => {
+  const useNothing = useRemote({
+    url: 'http://nocomponent.com/nothing.js',
+    name: 'nothing',
+    timeout: 10,
+    retries: 2,
+  });
+  
   const { result, waitForNextUpdate } = renderHook(() =>
-    useRemote({
-      url: 'http://nocomponent.com/nothing.js',
-      name: 'nothing',
-      timeout: 10,
-      retries: 2,
-    }),
+    useNothing(),
   );
 
   expect(result.current.loading).toBe(true);

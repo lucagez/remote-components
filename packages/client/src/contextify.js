@@ -1,4 +1,4 @@
-import { registerComponent, getDependency, hasDependency } from './register';
+import { registerComponent } from './register';
 
 /**
  * Contextifying module, exports, require.
@@ -10,6 +10,8 @@ import { registerComponent, getDependency, hasDependency } from './register';
  * - __webpack_require__ 
  * - parcelRequire
  */
+
+// TODO: => move to scope?
 const _module = (resolution, _exports = {}) => {
   registerComponent(resolution, _exports);
 
@@ -21,23 +23,6 @@ const _module = (resolution, _exports = {}) => {
       this.exports.default = value;
     },
   };
-};
-
-/**
- * require.
- *
- * Global patch to allow CommonJS and UMD imports.
- * Unfortunately using native import syntax is not
- * possible in order to keep IE compatibility
- *
- * @param {string} dependency
- */
-const _require = (dependency) => {
-  if (!hasDependency(dependency)) {
-    throw new Error(`Attempting to require '${dependency}' without previous registration.`);
-  }
-
-  return getDependency(dependency);
 };
 
 /**
@@ -55,13 +40,13 @@ const _require = (dependency) => {
  * variables in the `window` object and avoid breaking
  * compatibility with standard js formats (CommonJS and UMD).
  */
-const contextify = (resolution, source) => {
+const contextify = (resolution, source, scopedRequire) => {
   const contextifiedModule = _module(resolution);
 
   (new Function('module', 'exports', 'require', source))(
     contextifiedModule,
     contextifiedModule.exports,
-    _require,
+    scopedRequire,
   );
 };
 

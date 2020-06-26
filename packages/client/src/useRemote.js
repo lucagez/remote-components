@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { removeComponent, getComponent } from './register';
+import { removeComponent, getComponent, REGISTRY, createScope } from './register';
 import { remoteImport } from './loader';
 import { contextify } from './contextify';
 
@@ -25,65 +25,90 @@ import { contextify } from './contextify';
  *
  * @param {object} config
  * @param {string} config.url - URL of the remote component
+ * @param {string} [config.name] - name of the remote component
+ * @param {string} [config.dependencies] - Scoped dependencies.
  * @param {number} [config.timeout] - Time (ms) between retries on errors when fetching.
  * @param {number} [config.retries] - Number of retries when encountring errors while fetching components.
  */
-const useRemote = ({ url, timeout, retries = 1 } = {}) => {
-  const [data, setData] = useState({ loading: true });
-  const [retry, setRetry] = useState(retries);
+const useRemote = ({ url, name, dependencies = {}, timeout, retries = 1 } = {}) => {
+  const { _require, register } = createScope(REGISTRY);
 
-  const onDone = (source) => {
-    try {
-      /**
-       * Indirect eval call.
-       * Evaluating source in a mocked context.
-       * Providing ad-hoc module, exports and require objects.
-       */
-      contextify(url, source);
+  /**
+   * This is acting as a scoped register
+   * as the main registry is cloned (no global overrides).
+   * Therefore, every component can have
+   * a completely unique scope with different versions
+   * of the same dependency.
+   */
+  register(dependencies);
 
-      setData({
-        data: getComponent(url),
-      });
-    } catch (error) {
-      /**
-       * Evaluation error
-       */
+  const use = () => {
+    const [data, setData] = useState({ loading: true });
+    const [retry, setRetry] = useState(retries);
+  
+    const onDone = (source) => {
+      try {
+        /**
+         * Indirect eval call.
+         * Evaluating source in a mocked context.
+         * Providing ad-hoc module, exports and require objects.
+         */
+        contextify(url, source, _require);
+
+        setData({
+          data: getComponent(url),
+        });
+      } catch (error) {
+        /**
+         * Evaluation error
+         */
+        setData({
+          error,
+        });
+      }
+    };
+  
+    const onRetry = () => {
+      if (retry) setRetry(retry - 1);
+      removeComponent(url);
+    };
+  
+    const onError = (error) => {
+      if (timeout && retries) setTimeout(onRetry, timeout);
+  
       setData({
         error,
       });
-    }
+    };
+  
+    useEffect(() => {
+      const registered = getComponent(url);
+  
+      setData({
+        loading: typeof registered === 'undefined',
+        data: registered,
+      });
+  
+      if (typeof registered !== 'undefined') return;
+  
+      remoteImport(url, {
+        onDone,
+        onError,
+      });
+    }, [retry]);
+  
+    return data;
   };
 
-  const onRetry = () => {
-    if (retry) setRetry(retry - 1);
-    removeComponent(url);
-  };
+  /**
+   * TODO: best strategy for naming?
+   */
+  Object.defineProperty(use, `use${name}`, {
+    value: name,
+    configurable: true,
+  });
 
-  const onError = (error) => {
-    if (timeout && retries) setTimeout(onRetry, timeout);
-
-    setData({
-      error,
-    });
-  };
-
-  useEffect(() => {
-    const registered = getComponent(url);
-
-    setData({
-      loading: typeof registered === 'undefined',
-      data: registered,
-    });
-
-    if (typeof registered !== 'undefined') return;
-
-    remoteImport(url, {
-      onDone,
-      onError,
-    });
-  }, [retry]);
-
-  return data;
+  return use;
 };
 
 export { useRemote };

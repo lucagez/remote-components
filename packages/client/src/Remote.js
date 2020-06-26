@@ -39,16 +39,19 @@ const Remote = ({
   Loading: LoadingComp = () => null,
   Error: ErrorComp = () => null,
 }) => {
+  const hocRemote = useRemote({
+    url,
+    timeout,
+    retries,
+    dependencies,
+  });
+
   /**
    * Reference the HOC in order to override its name,
    * undefined otherwise
    */
   const Component = (props) => {
-    const { data = {}, loading, error } = useRemote({
-      url,
-      timeout,
-      retries,
-    });
+    const { data = {}, loading, error } = hocRemote();
     const ref = useRef(null);
     const { default: Comp } = data;
 
