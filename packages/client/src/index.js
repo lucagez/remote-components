@@ -1,4 +1,4 @@
-import 'regenerator-runtime';
+// import 'regenerator-runtime';
 
 export { useRemote } from './useRemote';
 export { Remote } from './Remote';

@@ -36,6 +36,7 @@ export default {
     }),
     babel({
       exclude: 'node_modules/**',
+      plugins: ['babel-plugin-transform-async-to-promises'],
       presets: [
         ['@babel/env', {
           'targets': {

@@ -54,16 +54,13 @@ const useRemote = ({ url, timeout, retries = 1 } = {}) => {
     }
   };
 
+  const onRetry = () => {
+    if (retry) setRetry(retry - 1);
+    removeComponent(url);
+  };
+
   const onError = (error) => {
-    if (timeout && retries) {
-      setTimeout(
-        () => {
-          if (retry) setRetry(retry - 1);
-          removeComponent(url);
-        },
-        timeout,
-      );
-    }
+    if (timeout && retries) setTimeout(onRetry, timeout);
 
     setData({
       error,

@@ -1,9 +1,10 @@
 import { swrImport } from './swr';
 import { legacyImport } from './legacy';
+import { modern } from '../features';
 
 /**
  * TODO: switch based on config
  */
-export const remoteImport = window.Cache
+export const remoteImport = modern
   ? swrImport
   : legacyImport;
