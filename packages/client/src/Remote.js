@@ -77,6 +77,7 @@ const Remote = ({
       }
 
       if (typeof error !== 'undefined') {
+        // TODO: add manual refetch on network errors?
         render(ErrorComp);
       }
 
