@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { useRemote } from './useRemote';
 import { registerDependencies } from './register';
+import { ErrorBoundary } from './error-boundary';
 
 /**
  * Remote Component.
@@ -28,6 +29,7 @@ import { registerDependencies } from './register';
  * @param {number} [config.retries] - Number of retries to fetch remote component
  * @param {function} [config.Loading] - Component rendered while fetching remote source
  * @param {function} [config.Error] - Component rendered in case of unexpected errors
+ * @param {function} [config.onError] - Callback function invoked when an error is catched by the remote error boundary
  * @return {function} Remote Component
  */
 const Remote = ({
@@ -38,6 +40,7 @@ const Remote = ({
   dependencies = {},
   Loading: LoadingComp = () => null,
   Error: ErrorComp = () => null,
+  onError = () => void 0,
 }) => {
   const hocRemote = useRemote({
     url,
@@ -56,17 +59,19 @@ const Remote = ({
     const { default: Comp } = data;
 
     const render = (Component) => {
-      ReactDOM.render(
-        React.createElement(Component, {
-          ...props,
-          url,
-          error,
-        }),
-        ref.current,
-      );
+      const Valid = React.isValidElement(Component)
+        ? Component
+        : React.createElement(Component, {
+            ...props,
+            url,
+            error,
+          });
+
+      ReactDOM.render(Valid, ref.current);
     };
 
     useLayoutEffect(() => {
+      // TODO: add multiple checks => if every var is undefined
       if (typeof loading !== 'undefined') {
         render(LoadingComp);
       }
@@ -76,7 +81,22 @@ const Remote = ({
       }
 
       if (typeof Comp !== 'undefined') {
-        render(Comp);
+        render(
+          <ErrorBoundary
+            onError={onError}
+            fallback={({ reset, error: fallbackError }) => {
+              return (
+                <ErrorComp
+                  {...props}
+                  reset={reset}
+                  error={fallbackError}
+                />
+              );
+            }}
+          >
+            <Comp {...props} />
+          </ErrorBoundary>,
+        );
       }
     }, [Comp, loading, error]);
 

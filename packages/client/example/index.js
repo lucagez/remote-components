@@ -95,13 +95,14 @@ const versions = [
 
 const Gooey = Remote({
   name: 'dummy',
-  // dependencies: {
-  //   'react': React,
-  // },
+  dependencies: {
+    'react': React,
+  },
   url: 'http://localhost:5000/dummy/dist/dummy.umd.js',
-  Error: ({ error }) => <h1>{error.toString()}</h1>,
+  Loading: () => <h1>Loading</h1>,
+  Error: ({ error, reset }) => <h1 onClick={reset}>{error.toString()}</h1>,
   timeout: 2000,
-  retries: 10,
+  retries: 1,
 });
 
 const App = () => {

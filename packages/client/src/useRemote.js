@@ -96,7 +96,7 @@ const useRemote = ({ url, name, dependencies = {}, timeout, retries = 1 } = {}) 
         onError,
       });
     }, [retry]);
-  
+
     return data;
   };
 
