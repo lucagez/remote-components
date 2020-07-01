@@ -1,4 +1,4 @@
-import { registerComponent } from './register';
+import { registerComponent } from './scopes';
 
 /**
  * Contextifying module, exports, require.

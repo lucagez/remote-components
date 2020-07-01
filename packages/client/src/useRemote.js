@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import {
   removeComponent,
   getComponent,
-  REGISTRY,
+  SCOPE,
   createScope,
-} from './register';
+} from './scopes';
 import { remoteImport } from './loader';
 import { contextify } from './contextify';
 
@@ -30,21 +30,19 @@ import { contextify } from './contextify';
  *
  * @param {object} config
  * @param {string} config.url - URL of the remote component
- * @param {string} [config.name] - name of the remote component
  * @param {string} [config.dependencies] - Scoped dependencies.
  * @param {number} [config.timeout] - Time (ms) between retries on errors when fetching.
  * @param {number} [config.retries] - Number of retries when encountring errors while fetching components.
  */
 const useRemote = ({
   url,
-  name,
   dependencies = {},
   timeout,
   retries = 1,
 } = {}) => {
   const [data, setData] = useState({ loading: true });
   const [retry, setRetry] = useState(retries);
-  const scope = useRef(createScope(REGISTRY));
+  const scope = useRef(createScope(SCOPE));
 
   const onDone = (source) => {
     try {

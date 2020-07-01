@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { useRemote } from './useRemote';
-import { registerDependencies } from './register';
+import { registerDependencies } from './scopes';
 import { ErrorBoundary } from './error-boundary';
 
 /**
@@ -58,7 +58,19 @@ const Remote = ({
       dependencies,
     });
     const ref = useRef(null);
-    const { default: Comp } = data;
+    const { default: RemoteComp } = data;
+    const BoundedComp = () => (
+      <Provider>
+        <ErrorBoundary
+          onError={onError}
+          fallback={({ reset, error: fallbackError }) => {
+            return <ErrorComp {...props} reset={reset} error={fallbackError} />;
+          }}
+        >
+          <RemoteComp {...props} />
+        </ErrorBoundary>
+      </Provider>
+    );
 
     const render = (Component) => {
       const Valid = React.isValidElement(Component)
@@ -73,7 +85,6 @@ const Remote = ({
     };
 
     useLayoutEffect(() => {
-      // TODO: add multiple checks => if every var is undefined
       if (typeof loading !== 'undefined') {
         render(LoadingComp);
       }
@@ -83,30 +94,13 @@ const Remote = ({
         render(ErrorComp);
       }
 
-      if (typeof Comp !== 'undefined') {
-        render(
-          <Provider>
-            <ErrorBoundary
-              onError={onError}
-              fallback={({ reset, error: fallbackError }) => {
-                return (
-                  <ErrorComp
-                    {...props}
-                    reset={reset}
-                    error={fallbackError}
-                  />
-                );
-              }}
-            >
-              <Comp {...props} />
-            </ErrorBoundary>
-          </Provider>
-        );
+      if (typeof RemoteComp !== 'undefined') {
+        render(BoundedComp);
       }
-    }, [Comp, loading, error]);
+    }, [RemoteComp, loading, error]);
 
     return <div ref={ref} />;
-  };
+  }
 
   registerDependencies(dependencies);
 

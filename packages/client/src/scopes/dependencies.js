@@ -1,10 +1,3 @@
-/**
- * TODO: split register.js in 2 different domains:
- * - Dependencies
- * - Components
- */
-
-
 const createScope = (SCOPE) => {
   const scope = new Map(SCOPE);
 
@@ -53,50 +46,16 @@ const createScope = (SCOPE) => {
 
       return scope.get(dependency);
     },
-
-    /**
-     * CRUD utilities to interact with local SCOPE.
-     */
-    get: (dependency) => {
-      return scope.get(dependency);
-    },
-
-    set: (dependency, value) => {
-      return scope.set(dependency, value);
-    },
-
-    has: (dependency) => {
-      return scope.has(dependency);
-    },
-
-    remove: (dependency) => {
-      return scope.delete(dependency);
-    },
   };
 };
 
-/**
- * REGISTRY interfaces.
- * Used for storing/caching dependencies and already
- * evaluated components
- */
-
 const {
-  scope: REGISTRY,
+  scope: SCOPE,
   register: registerDependencies,
 } = createScope();
 
-const {
-  get: getComponent,
-  set: registerComponent,
-  remove: removeComponent,
-} = createScope();
-
 export {
+  SCOPE,
   registerDependencies,
-  registerComponent,
-  removeComponent,
-  getComponent,
   createScope,
-  REGISTRY,
 };
