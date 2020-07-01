@@ -15,6 +15,8 @@ export const swrImport = async (url, { onError, onDone }) => {
     onDone(await cachedResponse.text());
   }
 
+  // TODO: add timeouts
+  // TODO: optional refetch => as it is causing additional evaluation
   idle(async () => {
     try {
       if (!navigator.onLine) return;
