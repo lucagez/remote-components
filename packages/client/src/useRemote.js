@@ -1,10 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import {
-  removeComponent,
-  getComponent,
-  SCOPE,
-  createScope,
-} from './scopes';
+import { useState, useEffect } from 'react';
+import { removeComponent, getComponent } from './scopes';
 import { remoteImport } from './loader';
 import { contextify } from './contextify';
 
@@ -34,15 +29,9 @@ import { contextify } from './contextify';
  * @param {number} [config.timeout] - Time (ms) between retries on errors when fetching.
  * @param {number} [config.retries] - Number of retries when encountring errors while fetching components.
  */
-const useRemote = ({
-  url,
-  dependencies = {},
-  timeout,
-  retries = 1,
-} = {}) => {
+const useRemote = ({ url, dependencies = {}, timeout, retries = 1 } = {}) => {
   const [data, setData] = useState({ loading: true });
   const [retry, setRetry] = useState(retries);
-  const scope = useRef(createScope(SCOPE));
 
   const onDone = (source) => {
     try {
@@ -51,7 +40,7 @@ const useRemote = ({
        * Evaluating source in a mocked context.
        * Providing ad-hoc module, exports and require objects.
        */
-      contextify(url, source, scope.current._require);
+      contextify(url, source, dependencies);
 
       setData({
         data: getComponent(url),
@@ -88,15 +77,6 @@ const useRemote = ({
     });
 
     if (typeof registered !== 'undefined') return;
-
-    /**
-     * This is acting as a scoped register
-     * as the main registry is cloned (no global overrides).
-     * Therefore, every component can have
-     * a completely unique scope with different versions
-     * of the same dependency.
-     */
-    scope.current.register(dependencies);
 
     remoteImport(url, {
       onDone,
