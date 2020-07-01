@@ -51,13 +51,11 @@ afterAll(() => {
 });
 
 test('Should fetch and evaluate source', async () => {
-  const useDummy = useRemote({
-    url: 'http://dummy.com/component.js',
-    name: 'dummy',
-  });
-
   const { result, waitForNextUpdate } = renderHook(() =>
-    useDummy(),
+    useRemote({
+      url: 'http://dummy.com/component.js',
+      name: 'dummy',
+    }),
   );
 
   expect(result.current.loading).toBe(true);
@@ -68,16 +66,17 @@ test('Should fetch and evaluate source', async () => {
 
   expect(result.current.loading).toBe(undefined);
   expect(result.current.error).toBe(undefined);
-  expect(result.current.data.default.Component.toString()).toBe(`() => console.log('DUMMY')`);
+  expect(result.current.data.default.Component.toString()).toBe(
+    `() => console.log('DUMMY')`,
+  );
 });
 
 test('should return uri-error on network failures', async () => {
-  const useNothing = useRemote({
-    name: 'nocomp',
-    url: 'http://nocomponent.com/nothing.js',
-  });
   const { result, waitForNextUpdate } = renderHook(() =>
-    useNothing(),
+    useRemote({
+      name: 'nocomp',
+      url: 'http://nocomponent.com/nothing.js',
+    }),
   );
 
   expect(result.current.loading).toBe(true);
@@ -96,13 +95,11 @@ test('should return uri-error on network failures', async () => {
 });
 
 test('should return evaluation-error on parsing failures', async () => {
-  const useWrong = useRemote({
-    name: 'wrong',
-    url: 'http://dummy.com/wrong.js',
-  });
-  
   const { result, waitForNextUpdate } = renderHook(() =>
-    useWrong(),
+    useRemote({
+      name: 'wrong',
+      url: 'http://dummy.com/wrong.js',
+    }),
   );
 
   await waitForNextUpdate();
@@ -114,15 +111,13 @@ test('should return evaluation-error on parsing failures', async () => {
 });
 
 test('should retry n times after failure', async () => {
-  const useNothing = useRemote({
-    url: 'http://nocomponent.com/nothing.js',
-    name: 'nothing',
-    timeout: 10,
-    retries: 2,
-  });
-  
   const { result, waitForNextUpdate } = renderHook(() =>
-    useNothing(),
+    useRemote({
+      url: 'http://nocomponent.com/nothing.js',
+      name: 'nothing',
+      timeout: 10,
+      retries: 2,
+    }),
   );
 
   expect(result.current.loading).toBe(true);

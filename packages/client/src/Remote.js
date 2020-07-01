@@ -46,19 +46,17 @@ const Remote = ({
   // TODO: pass renderer as prop? => e.g. while mounting a component relying on
   // an old React version
 }) => {
-  const hocRemote = useRemote({
-    url,
-    timeout,
-    retries,
-    dependencies,
-  });
-
   /**
    * Reference the HOC in order to override its name,
    * undefined otherwise
    */
   function Component(props) {
-    const { data = {}, loading, error } = hocRemote();
+    const { data = {}, loading, error } = useRemote({
+      url,
+      timeout,
+      retries,
+      dependencies,
+    });
     const ref = useRef(null);
     const { default: Comp } = data;
 
