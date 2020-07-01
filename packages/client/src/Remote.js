@@ -29,6 +29,7 @@ import { ErrorBoundary } from './error-boundary';
  * @param {number} [config.retries] - Number of retries to fetch remote component
  * @param {function} [config.Loading] - Component rendered while fetching remote source
  * @param {function} [config.Error] - Component rendered in case of unexpected errors
+ * @param {function} [config.Provider] - Provider Component used to wrap remote inside an explicit context if needed
  * @param {function} [config.onError] - Callback function invoked when an error is catched by the remote error boundary
  * @return {function} Remote Component
  */
@@ -40,7 +41,10 @@ const Remote = ({
   dependencies = {},
   Loading: LoadingComp = () => null,
   Error: ErrorComp = () => null,
+  Provider = ({ children }) => children,
   onError = () => void 0,
+  // TODO: pass renderer as prop? => e.g. while mounting a component relying on
+  // an old React version
 }) => {
   const hocRemote = useRemote({
     url,
@@ -53,7 +57,7 @@ const Remote = ({
    * Reference the HOC in order to override its name,
    * undefined otherwise
    */
-  const Component = (props) => {
+  function Component(props) {
     const { data = {}, loading, error } = hocRemote();
     const ref = useRef(null);
     const { default: Comp } = data;
@@ -83,20 +87,22 @@ const Remote = ({
 
       if (typeof Comp !== 'undefined') {
         render(
-          <ErrorBoundary
-            onError={onError}
-            fallback={({ reset, error: fallbackError }) => {
-              return (
-                <ErrorComp
-                  {...props}
-                  reset={reset}
-                  error={fallbackError}
-                />
-              );
-            }}
-          >
-            <Comp {...props} />
-          </ErrorBoundary>,
+          <Provider>
+            <ErrorBoundary
+              onError={onError}
+              fallback={({ reset, error: fallbackError }) => {
+                return (
+                  <ErrorComp
+                    {...props}
+                    reset={reset}
+                    error={fallbackError}
+                  />
+                );
+              }}
+            >
+              <Comp {...props} />
+            </ErrorBoundary>
+          </Provider>
         );
       }
     }, [Comp, loading, error]);
@@ -106,10 +112,7 @@ const Remote = ({
 
   registerDependencies(dependencies);
 
-  Object.defineProperty(Component, 'name', {
-    value: name,
-    configurable: true,
-  });
+  Component.displayName = name || 'RemoteComponent';
 
   return Component;
 };
