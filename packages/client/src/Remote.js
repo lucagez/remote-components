@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { useRemote } from './useRemote';
+import { useRemote } from './use-remote';
 import { registerDependencies } from './scopes';
 import { ErrorBoundary } from './error-boundary';
 
