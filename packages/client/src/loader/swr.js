@@ -12,7 +12,6 @@ export const swrImport = async (url, {
   onDone,
   cache: cacheOptions,
 }) => {
-  console.log('cache');
   const cacheStorage = await caches.open('__REMOTE_COMPONENTS__v1');
   const cachedResponse = await cacheStorage.match(url);
 
