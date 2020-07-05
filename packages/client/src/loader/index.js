@@ -8,3 +8,5 @@ import { modern } from '../features';
 export const remoteImport = modern
   ? swrImport
   : legacyImport;
+
+export { swrImport, legacyImport };

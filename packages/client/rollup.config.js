@@ -7,7 +7,6 @@ import size from 'rollup-plugin-bundle-size';
 import { terser } from 'rollup-plugin-terser';
 import url from '@rollup/plugin-url';
 
-
 // TODO: Add dev build to keep jsdoc comments
 export default {
   input: path.resolve(__dirname, './src/index.js'),
@@ -36,13 +35,19 @@ export default {
     }),
     babel({
       exclude: 'node_modules/**',
-      plugins: ['babel-plugin-transform-async-to-promises'],
+      plugins: [
+        'babel-plugin-transform-async-to-promises',
+        '@babel/plugin-proposal-optional-chaining',
+      ],
       presets: [
-        ['@babel/env', {
-          'targets': {
-            'ie': '11',
-          }
-        }],
+        [
+          '@babel/env',
+          {
+            targets: {
+              ie: '11',
+            },
+          },
+        ],
         '@babel/preset-react',
       ],
     }),

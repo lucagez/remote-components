@@ -1,4 +1,5 @@
 export const legacyImport = (url, { onError, onDone }) => {
+  console.log('legacy')
   const request = new XMLHttpRequest();
   const error = new URIError(`Error while loading ${url}`);
 

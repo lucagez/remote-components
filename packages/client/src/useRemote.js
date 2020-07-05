@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { removeComponent, getComponent } from './scopes';
-import { remoteImport } from './loader';
+import { swrImport, legacyImport } from './loader';
+import { modern } from './features';
 import { contextify } from './contextify';
 
 /**
@@ -29,9 +30,16 @@ import { contextify } from './contextify';
  * @param {number} [config.timeout] - Time (ms) between retries on errors when fetching.
  * @param {number} [config.retries] - Number of retries when encountring errors while fetching components.
  */
-const useRemote = ({ url, dependencies = {}, timeout, retries = 1 } = {}) => {
+const useRemote = ({
+  url,
+  dependencies = {},
+  cache = {},
+  timeout,
+  retries = 1,
+} = {}) => {
   const [data, setData] = useState({ loading: true });
   const [retry, setRetry] = useState(retries);
+  const remoteImport = (cache.active && modern) ? swrImport : legacyImport;
 
   const onDone = (source) => {
     try {
@@ -79,6 +87,7 @@ const useRemote = ({ url, dependencies = {}, timeout, retries = 1 } = {}) => {
     if (typeof registered !== 'undefined') return;
 
     remoteImport(url, {
+      cache,
       onDone,
       onError,
     });
