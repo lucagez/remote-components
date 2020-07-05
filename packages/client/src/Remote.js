@@ -31,6 +31,10 @@ import { ErrorBoundary } from './error-boundary';
  * @param {function} [config.Error] - Component rendered in case of unexpected errors
  * @param {function} [config.Provider] - Provider Component used to wrap remote inside an explicit context if needed
  * @param {function} [config.onError] - Callback function invoked when an error is catched by the remote error boundary
+ * @param {object} [config.cache]
+ * @param {boolean} [config.cache.active] - Cache remote components with CacheStorage api
+ * @param {boolean} [config.cache.refetch] - Configure cache strategy. Refetch component after retrieving from cache
+ * @param {boolean} [config.cache.rerender] - Configure cache strategy. Rerender component after refetch
  * @return {function} Remote Component
  */
 const Remote = ({

@@ -22,7 +22,7 @@ export const swrImport = async (url, {
   // TODO: add timeouts
   idle(async () => {
     try {
-      if (!cacheOptions.refetch) return;
+      if (!cacheOptions.refetch && cachedResponse?.ok) return;
       if (!navigator.onLine) return;
 
       const request = new Request(url);
