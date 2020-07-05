@@ -1,4 +1,5 @@
 import { idle } from '../polyfills';
+import { DEFAULT_CACHE_NAME } from '../cache-utils';
 
 /**
  * TODO: Add config:
@@ -12,7 +13,7 @@ export const swrImport = async (url, {
   onDone,
   cache: cacheOptions,
 }) => {
-  const cacheStorage = await caches.open('__REMOTE_COMPONENTS__v1');
+  const cacheStorage = await caches.open(DEFAULT_CACHE_NAME);
   const cachedResponse = await cacheStorage.match(url);
 
   if (cachedResponse?.ok) {

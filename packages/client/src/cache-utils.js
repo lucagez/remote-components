@@ -1,6 +1,6 @@
 import { modern } from './features'; 
 
-const DEFAULT_CACHE_NAME = '__REMOTE_COMPONENTS__v1';
+export const DEFAULT_CACHE_NAME = '__REMOTE_COMPONENTS__v1';
 
 /**
  * clearCache.
