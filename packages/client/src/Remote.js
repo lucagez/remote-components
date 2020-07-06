@@ -43,7 +43,14 @@ const Remote = ({
   timeout,
   retries,
   dependencies = {},
-  cache = {},
+
+  /**
+   * - none
+   * - stale
+   * - revalidate
+   * - rerender
+   */
+  cacheStrategy = 'none',
   Loading: LoadingComp = () => null,
   Error: ErrorComp = () => null,
   Provider = ({ children }) => children,
@@ -61,12 +68,7 @@ const Remote = ({
       timeout,
       retries,
       dependencies,
-      cache: {
-        active: true,
-        refetch: true,
-        rerender: false,
-        ...cache,
-      },
+      cacheStrategy,
     });
     const ref = useRef(null);
     const { default: RemoteComp } = data;

@@ -13,6 +13,8 @@ export const swrImport = async (url, {
   onDone,
   cache: cacheOptions,
 }) => {
+  // TODO: check if component is already registered
+
   const cacheStorage = await caches.open(DEFAULT_CACHE_NAME);
   const cachedResponse = await cacheStorage.match(url);
 

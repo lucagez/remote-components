@@ -27,6 +27,7 @@ const contextify = (resolution, source, dependencies) => {
    * of the same dependency.
    */
   register(dependencies);
+  // TODO: move registerComponent here
 
   new Function('module', 'exports', 'require', source)(
     _module,

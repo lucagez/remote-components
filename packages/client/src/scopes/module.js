@@ -11,6 +11,7 @@ import { registerComponent } from './components';
  * - parcelRequire
  */
 const createModule = (resolution, _exports = {}) => {
+  // TODO: move registerComponent inside contextify function => contain side-effects
   registerComponent(resolution, _exports);
 
   return {
