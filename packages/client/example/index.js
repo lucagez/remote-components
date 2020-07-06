@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Remote, registerDependencies, remoteImport } from '../dist/remote.cjs';
-
+import { Remote, registerDependencies, remoteImport, clearEntries } from '../dist/remote.cjs';
 
 const Dummy = Remote({
   name: 'dummy',
@@ -14,17 +13,14 @@ const Dummy = Remote({
   Error: ({ error, reset }) => <h1 onClick={reset}>{error.toString()}</h1>,
   timeout: 2000,
   retries: 1,
-  // cache: {
-  //   active: true,
-  //   refetch: true,
-  // }
+  // cacheStrategy: 'stale',
 });
 
 const App = () => {
   return (
     <>
       <h1>App</h1>
-      <Dummy description={'ciao'} />
+      <Dummy description={`CIAO`} />
     </>
   );
 };

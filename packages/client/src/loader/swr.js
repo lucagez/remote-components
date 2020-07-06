@@ -11,31 +11,40 @@ import { DEFAULT_CACHE_NAME } from '../cache-utils';
 export const swrImport = async (url, {
   onError,
   onDone,
-  cache: cacheOptions,
+  cacheStrategy = 'none',
 }) => {
-  // TODO: check if component is already registered
+  // TODO: check if component is already registered?
 
   const cacheStorage = await caches.open(DEFAULT_CACHE_NAME);
   const cachedResponse = await cacheStorage.match(url);
+  const inCache = cachedResponse?.ok;
 
-  if (cachedResponse?.ok) {
+  const strategy = {
+    stale: inCache && /stale/.test(cacheStrategy),
+    revalidate: !inCache || /revalidate|rerender/.test(cacheStrategy),
+    rerender: !inCache || /rerender/.test(cacheStrategy),
+  };
+
+  if (inCache) {
     onDone(await cachedResponse.text());
   }
 
   // TODO: add timeouts
   idle(async () => {
     try {
-      if (!cacheOptions.refetch && cachedResponse?.ok) return;
+      if (strategy.stale) return;
       if (!navigator.onLine) return;
 
       const request = new Request(url);
       const response = await fetch(request);
 
-      cacheStorage.put(request, response.clone());
+      if (strategy.revalidate) {
+        cacheStorage.put(request, response.clone());
+      }
 
-      if (!cacheOptions.rerender) return;
-
-      onDone(await response.text());
+      if (strategy.rerender) {
+        onDone(await response.text());
+      };
     } catch {
       onError(new URIError(`Error while loading ${url}`));
     }

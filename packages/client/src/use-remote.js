@@ -33,13 +33,13 @@ import { contextify } from './contextify';
 const useRemote = ({
   url,
   dependencies = {},
-  cache = {},
+  cacheStrategy = 'none',
   timeout,
   retries = 1,
 } = {}) => {
   const [data, setData] = useState({ loading: true });
   const [retry, setRetry] = useState(retries);
-  const remoteImport = (cache.active && modern) ? swrImport : legacyImport;
+  const remoteImport = (cacheStrategy !== 'none' && modern) ? swrImport : legacyImport;
 
   const onDone = (source) => {
     try {
@@ -87,7 +87,7 @@ const useRemote = ({
     if (typeof registered !== 'undefined') return;
 
     remoteImport(url, {
-      cache,
+      cacheStrategy,
       onDone,
       onError,
     });

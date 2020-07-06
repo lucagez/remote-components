@@ -21,8 +21,8 @@ const _clearCache = async () => {
  * 
  * @param {array} entries - Url to be removed from cache
  */
-const _clearEntries = (entries) => {
-  const current = caches.open(DEFAULT_CACHE_NAME);
+const _clearEntries = async (entries) => {
+  const current = await caches.open(DEFAULT_CACHE_NAME);
   const deletes = entries.map(entry => current.delete(entry));
 
   return Promise.all(deletes);
