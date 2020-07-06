@@ -2,7 +2,7 @@ import React from 'react';
 import { renderHook } from '@testing-library/react-hooks';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { useRemote } from '../src/useRemote';
+import { useRemote } from '../src/use-remote';
 
 import 'expect-puppeteer';
 
