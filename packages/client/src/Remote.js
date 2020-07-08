@@ -1,7 +1,6 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { useRemote } from './use-remote';
-import { registerDependencies } from './scopes';
 import { ErrorBoundary } from './error-boundary';
 
 /**
@@ -111,8 +110,6 @@ const Remote = ({
 
     return <div ref={ref} />;
   }
-
-  registerDependencies(dependencies);
 
   Component.displayName = name || 'RemoteComponent';
 

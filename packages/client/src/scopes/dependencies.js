@@ -20,9 +20,9 @@ const createScope = (SCOPE) => {
      */
     register: (dependencies) => {
       for (const [key, value] of Object.entries(dependencies)) {
-        // if (scope.has(key)) {
-        //   throw new Error(`Attempting registry override on: ${key}`);
-        // }
+        if (scope.has(key)) {
+          throw new Error(`Attempting registry override on: ${key}`);
+        }
 
         scope.set(key, value);
       }

@@ -13,7 +13,7 @@ const Dummy = Remote({
   Error: ({ error, reset }) => <h1 onClick={reset}>{error.toString()}</h1>,
   timeout: 2000,
   retries: 1,
-  // cacheStrategy: 'stale',
+  cacheStrategy: 'none',
 });
 
 const App = () => {
