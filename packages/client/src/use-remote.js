@@ -55,6 +55,8 @@ const useRemote = ({
   };
 
   useEffect(() => {
+    setData({ loading: true });
+
     remoteImport({
       url,
       dependencies,
