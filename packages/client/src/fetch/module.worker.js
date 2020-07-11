@@ -1,4 +1,3 @@
-console.log('SERVICE')
 /**
  * TODO: add better web worker loader support
  */

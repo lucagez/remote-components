@@ -7,7 +7,7 @@ import { DEFAULT_CACHE_NAME } from '../cache-utils';
  * - refresh / revalidate
  * - timeout -> revalidate after n ms
  */
-export const swrImport = async (url, cacheStrategy = 'none') => {
+const swrFetch = async (url, cacheStrategy = 'none') => {
   const cacheStorage = await caches.open(DEFAULT_CACHE_NAME);
   const cachedResponse = await cacheStorage.match(url);
   const inCache = cachedResponse?.ok;
@@ -40,3 +40,5 @@ export const swrImport = async (url, cacheStrategy = 'none') => {
     throw new URIError(`Error while loading ${url}`);
   }
 };
+
+export { swrFetch };

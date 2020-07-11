@@ -1,4 +1,4 @@
-import { swrImport, legacyImport } from './loader';
+import { swrFetch, legacyFetch } from './fetch';
 import { modern } from './features';
 import { hasComponent, getComponent } from './scopes';
 import { contextify } from './contextify';
@@ -9,7 +9,7 @@ const remoteImport = async ({
   cacheStrategy = 'none',
 }) => {
   const fetchSource =
-    modern && cacheStrategy !== 'none' ? swrImport : legacyImport;
+    modern && cacheStrategy !== 'none' ? swrFetch : legacyFetch;
 
   if (hasComponent(url)) {
     return getComponent(url);

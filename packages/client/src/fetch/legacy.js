@@ -1,4 +1,4 @@
-export const legacyImport = (url) => new Promise((resolve, reject) => {
+const legacyFetch = (url) => new Promise((resolve, reject) => {
   const request = new XMLHttpRequest();
   const error = new URIError(`Error while loading ${url}`);
 
@@ -16,3 +16,5 @@ export const legacyImport = (url) => new Promise((resolve, reject) => {
   request.open('GET', url, true);
   request.send(null);
 });
+
+export { legacyFetch };

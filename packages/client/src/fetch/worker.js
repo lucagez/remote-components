@@ -5,7 +5,7 @@ import inlinedWorker from './module.worker.js';
  * in the background without blocking the main
  * thread.
  */
-export const workerImport = (url, { onError, onDone }) => {
+const workerFetch = (url, { onError, onDone }) => {
   const loader = new Worker(inlinedWorker, {
     type: 'module',
   });
@@ -22,3 +22,5 @@ export const workerImport = (url, { onError, onDone }) => {
   loader.postMessage(url);
   loader.addEventListener('message', handler);
 };
+
+export { workerFetch };
