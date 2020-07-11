@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { removeComponent, getComponent } from './scopes';
-import { swrImport, legacyImport } from './loader';
-import { modern } from './features';
-import { contextify } from './contextify';
+import { removeComponent } from './scopes';
+import { remoteImport } from './import';
 
 /**
  * useRemote.
@@ -40,28 +38,9 @@ const useRemote = ({
 } = {}) => {
   const [data, setData] = useState({ loading: true });
   const [retry, setRetry] = useState(retries);
-  const remoteImport = (cacheStrategy !== 'none' && modern) ? swrImport : legacyImport;
 
-  const onDone = (source) => {
-    try {
-      /**
-       * Indirect eval call.
-       * Evaluating source in a mocked context.
-       * Providing ad-hoc module, exports and require objects.
-       */
-      contextify(url, source, dependencies);
-
-      setData({
-        data: getComponent(url),
-      });
-    } catch (error) {
-      /**
-       * Evaluation error
-       */
-      setData({
-        error,
-      });
-    }
+  const onDone = (component) => {
+    setData({ data: component });
   };
 
   const onRetry = () => {
@@ -72,26 +51,17 @@ const useRemote = ({
   const onError = (error) => {
     if (timeout && retries) setTimeout(onRetry, timeout);
 
-    setData({
-      error,
-    });
+    setData({ error });
   };
 
   useEffect(() => {
-    const registered = getComponent(url);
-
-    setData({
-      loading: typeof registered === 'undefined',
-      data: registered,
-    });
-
-    if (typeof registered !== 'undefined') return;
-
-    remoteImport(url, {
+    remoteImport({
+      url,
+      dependencies,
       cacheStrategy,
     })
-    .then(onDone)
-    .catch(onError);
+      .then(onDone)
+      .catch(onError);
   }, [retry]);
 
   return data;
