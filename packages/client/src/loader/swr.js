@@ -9,8 +9,6 @@ import { DEFAULT_CACHE_NAME } from '../cache-utils';
  * - timeout -> revalidate after n ms
  */
 export const swrImport = async (url, cacheStrategy = 'none') => {
-  // TODO: check if component is already registered?
-
   const cacheStorage = await caches.open(DEFAULT_CACHE_NAME);
   const cachedResponse = await cacheStorage.match(url);
   const inCache = cachedResponse?.ok;

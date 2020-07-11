@@ -1,6 +1,4 @@
 export const legacyImport = (url) => new Promise((resolve, reject) => {
-  // TODO: check if component is already registered
-
   const request = new XMLHttpRequest();
   const error = new URIError(`Error while loading ${url}`);
 
