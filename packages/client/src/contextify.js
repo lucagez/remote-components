@@ -1,4 +1,4 @@
-import { SCOPE, createScope, createModule } from './scopes';
+import { SCOPE, createScope, createModule, registerComponent } from './scopes';
 
 /**
  * Contextifying module, exports, require.
@@ -16,7 +16,7 @@ import { SCOPE, createScope, createModule } from './scopes';
  * compatibility with standard js formats (CommonJS and UMD).
  */
 const contextify = (resolution, source, dependencies) => {
-  const _module = createModule(resolution);
+  const _module = createModule();
   const { register, _require } = createScope(SCOPE);
 
   /**
@@ -27,7 +27,7 @@ const contextify = (resolution, source, dependencies) => {
    * of the same dependency.
    */
   register(dependencies);
-  // TODO: move registerComponent here
+  registerComponent(resolution, _module.exports);
 
   new Function('module', 'exports', 'require', source)(
     _module,

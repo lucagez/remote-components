@@ -1,5 +1,3 @@
-import { registerComponent } from './components';
-
 /**
  * Contextifying module, exports, require.
  * Necessary to keep interoperability
@@ -10,10 +8,7 @@ import { registerComponent } from './components';
  * - __webpack_require__
  * - parcelRequire
  */
-const createModule = (resolution, _exports = {}) => {
-  // TODO: move registerComponent inside contextify function => contain side-effects
-  registerComponent(resolution, _exports);
-
+const createModule = (_exports = {}) => {
   return {
     get exports() {
       return _exports;

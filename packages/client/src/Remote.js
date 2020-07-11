@@ -39,13 +39,6 @@ const Remote = ({
   timeout,
   retries,
   dependencies = {},
-
-  /**
-   * - none
-   * - stale
-   * - revalidate
-   * - rerender
-   */
   cacheStrategy = 'none',
   Loading: LoadingComp = () => null,
   Error: ErrorComp = () => null,

@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 
 import { Remote, registerDependencies, remoteImport, clearEntries } from '../dist/remote.cjs';
 
+registerDependencies({
+  react: React
+})
+
 const Dummy = Remote({
   name: 'dummy',
   dependencies: {
