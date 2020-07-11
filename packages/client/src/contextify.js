@@ -25,6 +25,9 @@ const contextify = (resolution, source, dependencies) => {
    * Therefore, every component can have
    * a completely unique scope with different versions
    * of the same dependency.
+   * 
+   * TODO: register can also be an async function.
+   * Therefore, dependecies could potentially be lazy loaded
    */
   register(dependencies);
   registerComponent(resolution, _module.exports);
