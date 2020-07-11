@@ -1,4 +1,3 @@
-import { idle } from '../polyfills';
 import { DEFAULT_CACHE_NAME } from '../cache-utils';
 
 /**
