@@ -1,4 +1,4 @@
-export const legacyImport = (url, { onError, onDone }) => {
+export const legacyImport = (url) => new Promise((resolve, reject) => {
   // TODO: check if component is already registered
 
   const request = new XMLHttpRequest();
@@ -7,14 +7,14 @@ export const legacyImport = (url, { onError, onDone }) => {
   request.onreadystatechange = () => {
     if (request.readyState !== 4) return;
     if (request.status === 200) {
-      onDone(request.responseText);
+      resolve(request.responseText);
     } else {
-      onError(error);
+      reject(error);
     }
   };
 
-  request.onerror = () => onError(error);
+  request.onerror = () => reject(error);
 
   request.open('GET', url, true);
   request.send(null);
-};
+});

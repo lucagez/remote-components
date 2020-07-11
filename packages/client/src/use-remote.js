@@ -89,9 +89,9 @@ const useRemote = ({
 
     remoteImport(url, {
       cacheStrategy,
-      onDone,
-      onError,
-    });
+    })
+    .then(onDone)
+    .catch(onError);
   }, [retry]);
 
   return data;

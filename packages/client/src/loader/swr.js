@@ -8,11 +8,9 @@ import { DEFAULT_CACHE_NAME } from '../cache-utils';
  * - refresh / revalidate
  * - timeout -> revalidate after n ms
  */
-export const swrImport = async (url, {
-  onError,
-  onDone,
+export const swrImport = (url, {
   cacheStrategy = 'none',
-}) => {
+}) => new Promise(async (resolve, reject) => {
   // TODO: check if component is already registered?
 
   const cacheStorage = await caches.open(DEFAULT_CACHE_NAME);
@@ -26,7 +24,7 @@ export const swrImport = async (url, {
   };
 
   if (inCache) {
-    onDone(await cachedResponse.text());
+    return resolve(await cachedResponse.text());
   }
 
   // TODO: add timeouts
@@ -43,10 +41,10 @@ export const swrImport = async (url, {
       }
 
       if (strategy.rerender) {
-        onDone(await response.text());
+        return resolve(await response.text());
       };
     } catch {
-      onError(new URIError(`Error while loading ${url}`));
+      return reject(new URIError(`Error while loading ${url}`));
     }
   });
-};
+});
