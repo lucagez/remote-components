@@ -17,7 +17,7 @@ import { SCOPE, createScope, createModule, registerComponent } from './scopes';
  */
 const contextify = (resolution, source, dependencies) => {
   const _module = createModule();
-  const { register, _require } = createScope(SCOPE);
+  const { register, _require } = createScope(SCOPE, false);
 
   /**
    * This is acting as a scoped register

@@ -1,4 +1,4 @@
-const createScope = (SCOPE) => {
+const createScope = (SCOPE, strict = true) => {
   const scope = new Map(SCOPE);
 
   return {
@@ -20,7 +20,7 @@ const createScope = (SCOPE) => {
      */
     register: (dependencies) => {
       for (const [key, value] of Object.entries(dependencies)) {
-        if (scope.has(key)) {
+        if (scope.has(key) && strict) {
           throw new Error(`Attempting registry override on: ${key}`);
         }
 
