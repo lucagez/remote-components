@@ -1,7 +1,4 @@
-'use strict';
 
-module.exports = core;
-
-function core() {
-    // TODO
-}
+export { registerDependencies } from './scopes';
+export { remoteImport } from './import';
+export { clearCache, clearEntries } from './cache-utils';
