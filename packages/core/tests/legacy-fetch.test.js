@@ -9,6 +9,7 @@ module.exports = {
   name: 'dummy',
 }
 `;
+const ERR_URL = 'http://err.com'
 
 
 const server = setupServer(
@@ -17,6 +18,12 @@ const server = setupServer(
       ctx.delay(10),
       ctx.status(200),
       ctx.text(DUMMY_RES),
+    );
+  }),
+  rest.get(ERR_URL, (_, res, ctx) => {
+    return res(
+      ctx.delay(10),
+      ctx.status(500),
     );
   }),
 );
@@ -33,4 +40,23 @@ test('Should fetch source', async () => {
   const source = await legacyFetch(DUMMY_URL);
 
   expect(source).toBe(DUMMY_RES);
+});
+
+test('Should throw on server error', () => {
+  return expect(legacyFetch(ERR_URL))
+    .rejects
+    .toThrow();
+});
+
+test('Should return URI error on fetch error', async done => {
+  expect.assertions(2);
+
+  try {
+    await legacyFetch(ERR_URL);
+  } catch (error) {
+    expect(error).toBeInstanceOf(URIError);
+    expect(error.toString()).toBe(`URIError: Error while loading ${ERR_URL}`);
+
+    done();
+  }
 });
