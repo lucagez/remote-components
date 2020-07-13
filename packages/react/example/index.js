@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Remote } from '@remote-components/client';
+import { Remote } from '@remote-components/react';
 import { registerDependencies } from '@remote-components/core';
 
 registerDependencies({

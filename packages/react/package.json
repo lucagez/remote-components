@@ -1,5 +1,5 @@
 {
-  "name": "@remote-components/client",
+  "name": "@remote-components/react",
   "version": "0.0.11",
   "publishConfig": {
     "access": "public"
@@ -60,7 +60,7 @@
   },
   "alias": {
     "@remote-components/core": "../core/dist/remote-core.esm.js",
-    "@remote-components/client": "../core/dist/remote-components.esm.js"
+    "@remote-components/react": "./dist/remote-react.esm.js"
   },
   "gitHead": "d8af2b297d187fe24682bea687cec9c1292349bd"
 }
