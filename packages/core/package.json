@@ -24,7 +24,8 @@
     "example": "parcel ./example/index.html",
     "dev": "run-p watch example",
     "test:init": "jest --init",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watchAll"
   },
 	"devDependencies": {
     "@babel/core": "^7.9.6",
