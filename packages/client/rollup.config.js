@@ -18,6 +18,7 @@ export default {
       globals: {
         react: 'React',
         'react-dom': 'ReactDOM',
+        '@remote-components/core': 'remoteCore'
       },
     },
     {

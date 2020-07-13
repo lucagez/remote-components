@@ -2,7 +2,9 @@
   "name": "remote-components",
   "private": true,
   "devDependencies": {
-    "lerna": "^3.20.2",
-    "msw": "^0.19.4"
-  }
+    "lerna": "^3.20.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

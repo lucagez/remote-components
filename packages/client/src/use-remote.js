@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { removeComponent } from './scopes';
-import { remoteImport } from './import';
+import { remoteImport, removeComponent } from '@remote-components/core';
 
 /**
  * useRemote.

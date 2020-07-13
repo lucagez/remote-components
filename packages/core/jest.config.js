@@ -6,7 +6,6 @@ module.exports = {
   rootDir: path.resolve(__dirname, './tests'),
   testMatch: ['**/?(*.)+(test).[tj]s?(x)'],
   testPathIgnorePatterns: ['/node_modules/'],
-  preset: 'jest-puppeteer',
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['./setup-tests.js'],
 };

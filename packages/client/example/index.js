@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Remote, registerDependencies, remoteImport, clearEntries } from '../dist/remote.cjs';
+import { Remote } from '@remote-components/client';
+import { registerDependencies } from '@remote-components/core';
 
 registerDependencies({
   react: React

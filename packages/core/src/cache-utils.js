@@ -1,13 +1,15 @@
 import { modern } from './features'; 
 
-export const DEFAULT_CACHE_NAME = '__REMOTE_COMPONENTS__v1';
+const DEFAULT_CACHE_NAME = '__REMOTE_COMPONENTS__v1';
 
 /**
  * clearCache.
  * 
  * Destroy current cache
  */
-const _clearCache = async () => {
+const clearCache = async () => {
+  if (!modern) return;
+
   const keys = await caches.keys();
   const current = keys.find(key => key === DEFAULT_CACHE_NAME);
 
@@ -21,12 +23,17 @@ const _clearCache = async () => {
  * 
  * @param {array} entries - Url to be removed from cache
  */
-const _clearEntries = async (entries) => {
+const clearEntries = async (entries) => {
+  if (!modern) return;
+
   const current = await caches.open(DEFAULT_CACHE_NAME);
   const deletes = entries.map(entry => current.delete(entry));
 
   return Promise.all(deletes);
 };
 
-export const clearCache = modern ? _clearCache : () => void 0;
-export const clearEntries = modern ? _clearEntries : () => void 0;
+export {
+  clearCache,
+  clearEntries,
+  DEFAULT_CACHE_NAME,
+};

@@ -1,10 +1,7 @@
-import React from 'react';
 import { renderHook } from '@testing-library/react-hooks';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { useRemote } from '../src/use-remote';
-
-import 'expect-puppeteer';
+import { useRemote } from '../dist/remote.cjs';
 
 const server = setupServer(
   rest.get('http://dummy.com/component.js', (req, res, ctx) => {
