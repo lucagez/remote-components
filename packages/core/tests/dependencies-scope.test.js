@@ -4,6 +4,10 @@ import {
   createScope,
 } from '../src/scopes/dependencies';
 
+afterAll(() => {
+  SCOPE.clear();
+});
+
 test('createScope initializes an empty scope', async () => {
   const scope = createScope();
 
@@ -59,7 +63,7 @@ test('Override attempt fails on strict mode', async () => {
     });
   } catch (error) {
     expect(error).toBeInstanceOf(Error);
-    expect(error.toString()).toBe(`Error: Attempting registry override on ${`testA`}`);
+    expect(error.toString()).toBe(`Error: Attempting registry override on '${`testA`}'`);
   }
 });
 
@@ -96,7 +100,7 @@ test('Require fails on unknown dependency', async () => {
     _require('test');
   } catch (error) {
     expect(error).toBeInstanceOf(Error);
-    expect(error.toString()).toBe(`Error: Attempting to require '${`test`}' without previous registration.`);
+    expect(error.toString()).toBe(`Error: Attempting to require '${`test`}' without previous registration`);
   }
 });
 
@@ -119,8 +123,36 @@ test('Require succeeds on registered dependency', async () => {
 });
 
 /**
- * TODO:
- * - test _require
- * - test global scope
- * - test global registerDependencies
+ * Testing main SCOPE and main registerDependencies
  */
+describe('Main SCOPE', () => {
+  test('Main SCOPE is empty at first load', async () => {
+    expect(SCOPE.size).toBe(0);
+  });
+  
+  test('registerDependencies has an effect only on main SCOPE', async () => {
+    registerDependencies({
+      test: 42,
+    });
+  
+    expect(SCOPE.size).toBe(1);
+    expect(SCOPE.get('test')).toBe(42);
+  });
+  
+  test('registerDependencies fails on override attempt', async () => {
+    expect.assertions(4);
+  
+    try {
+      registerDependencies({
+        test: 3.1415,
+      });
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      expect(error.toString()).toBe(`Error: Attempting registry override on '${`test`}'`);
+
+      // main scope is unchanged
+      expect(SCOPE.size).toBe(1);
+      expect(SCOPE.get('test')).toBe(42);
+    }
+  });
+});

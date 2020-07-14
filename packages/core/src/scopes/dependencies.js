@@ -21,7 +21,7 @@ const createScope = (SCOPE, strict = true) => {
     register: (dependencies) => {
       for (const [key, value] of Object.entries(dependencies)) {
         if (scope.has(key) && strict) {
-          throw new Error(`Attempting registry override on ${key}`);
+          throw new Error(`Attempting registry override on '${key}'`);
         }
 
         scope.set(key, value);
@@ -40,7 +40,7 @@ const createScope = (SCOPE, strict = true) => {
     _require: (dependency) => {
       if (!scope.has(dependency)) {
         throw new Error(
-          `Attempting to require '${dependency}' without previous registration.`,
+          `Attempting to require '${dependency}' without previous registration`,
         );
       }
 
