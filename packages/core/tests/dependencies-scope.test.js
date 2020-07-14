@@ -16,7 +16,6 @@ test('createScope initializes an empty scope', async () => {
 
 test('createScope can inherit from non-empty scope', async () => {
   const parentScope = new Map();
-
   parentScope.set('test', 42);
 
   const scope = createScope(parentScope);
@@ -60,8 +59,63 @@ test('Override attempt fails on strict mode', async () => {
     });
   } catch (error) {
     expect(error).toBeInstanceOf(Error);
-    expect(error.toString()).toBe(`Error: Attempting registry override on: ${`testA`}`);
+    expect(error.toString()).toBe(`Error: Attempting registry override on ${`testA`}`);
   }
+});
+
+test('Override attempt succeed on local scopes', async () => {
+  expect.assertions(3);
+
+  const parentScope = new Map();
+  parentScope.set('test', 42);
+
+  const { scope, register } = createScope(parentScope, false);
+
+  expect(scope.size).toBe(1);
+  expect(scope.get('test')).toBe(42);
+
+  try {
+    register({
+      test: 3.1415,
+    });
+    expect(scope.get('test')).toBe(3.1415);
+  } catch {}
+});
+
+/**
+ * This will prevent the loading of broken modules
+ */
+test('Require fails on unknown dependency', async () => {
+  expect.assertions(3);
+
+  const { scope, _require } = createScope(null, false);
+
+  expect(scope.size).toBe(0);
+
+  try {
+    _require('test');
+  } catch (error) {
+    expect(error).toBeInstanceOf(Error);
+    expect(error.toString()).toBe(`Error: Attempting to require '${`test`}' without previous registration.`);
+  }
+});
+
+test('Require succeeds on registered dependency', async () => {
+  expect.assertions(2);
+
+  const { scope, register, _require } = createScope(null, false);
+
+  expect(scope.size).toBe(0);
+
+  register({
+    test: 42,
+  });
+
+  try {
+    const test = _require('test');
+
+    expect(test).toBe(42);
+  } catch {}
 });
 
 /**
