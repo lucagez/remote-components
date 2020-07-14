@@ -36,3 +36,10 @@ test('Should return URL object when correct base', async () => {
     expect(target.href).toBe('http://url.com/path.js');
   } catch {}
 });
+
+test('Should return relative URL when passing relative arg', async () => {
+  const target = url('test', null, true);
+
+  expect(target).toBeInstanceOf(URL);
+  expect(target.href).toBe('http://localhost/test');
+});

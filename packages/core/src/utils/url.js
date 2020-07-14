@@ -1,8 +1,8 @@
-const url = (path, base) => {
+const url = (path, base, relative = false) => {
   try {
     return new URL(
       path,
-      base,
+      relative ? window.location.origin : base,
     );
   } catch {
     const args = [path, base]
