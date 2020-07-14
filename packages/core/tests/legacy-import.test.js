@@ -133,3 +133,69 @@ test('Should throw on network failure and unknown component', async () => {
     expect(error).toBeInstanceOf(Error);
   }
 });
+
+test('Should import module from relative url', async () => {
+  expect.assertions(3);
+
+  try {
+    server.use(
+      rest.get('http://localhost/path', (_, res, ctx) => {
+        expect(ctx).toBeTruthy();
+
+        return res(
+          ctx.delay(10),
+          ctx.status(200),
+          ctx.text(
+            `
+              module.exports = require('dummy');
+            `,
+          ),
+        );
+      }),
+    );
+
+    const _module = await remoteImport({
+      url: 'path',
+      relative: true,
+      dependencies: {
+        dummy: 42,
+      },
+    });
+
+    expect(_module).toBeInstanceOf(Object);
+    expect(_module.default).toBe(42);
+  } catch {}
+});
+
+test('Should import module using base url', async () => {
+  expect.assertions(3);
+
+  try {
+    server.use(
+      rest.get('http://pino.com/path', (_, res, ctx) => {
+        expect(ctx).toBeTruthy();
+
+        return res(
+          ctx.delay(10),
+          ctx.status(200),
+          ctx.text(
+            `
+              module.exports = require('dummy');
+            `,
+          ),
+        );
+      }),
+    );
+
+    const _module = await remoteImport({
+      url: 'path',
+      base: 'http://pino.com',
+      dependencies: {
+        dummy: 42,
+      },
+    });
+
+    expect(_module).toBeInstanceOf(Object);
+    expect(_module.default).toBe(42);
+  } catch {}
+});
