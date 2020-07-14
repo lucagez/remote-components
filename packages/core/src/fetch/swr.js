@@ -1,4 +1,4 @@
-import { DEFAULT_CACHE_NAME } from '../cache-utils';
+import { DEFAULT_CACHE_NAME } from '../utils/cache';
 
 /**
  * TODO: Add config:
@@ -7,7 +7,7 @@ import { DEFAULT_CACHE_NAME } from '../cache-utils';
  * - refresh / revalidate
  * - timeout -> revalidate after n ms
  */
-const swrFetch = async (url, cacheStrategy = 'none') => {
+const swrFetch = async ({ url, cacheStrategy = 'none' }) => {
   const cacheStorage = await caches.open(DEFAULT_CACHE_NAME);
   const cachedResponse = await cacheStorage.match(url);
   const inCache = cachedResponse?.ok;

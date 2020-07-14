@@ -11,7 +11,6 @@ module.exports = {
 `;
 const ERR_URL = 'http://err.com'
 
-
 const server = setupServer(
   rest.get(DUMMY_URL, (_, res, ctx) => {
     return res(
@@ -37,13 +36,13 @@ afterAll(() => {
 });
 
 test('Should fetch source', async () => {
-  const source = await legacyFetch(DUMMY_URL);
+  const source = await legacyFetch({ url: DUMMY_URL });
 
   expect(source).toBe(DUMMY_RES);
 });
 
 test('Should throw on server error', () => {
-  return expect(legacyFetch(ERR_URL))
+  return expect(legacyFetch({ url: ERR_URL }))
     .rejects
     .toThrow();
 });
@@ -52,7 +51,7 @@ test('Should return URI error on fetch error', async done => {
   expect.assertions(2);
 
   try {
-    await legacyFetch(ERR_URL);
+    await legacyFetch({ url: ERR_URL });
   } catch (error) {
     expect(error).toBeInstanceOf(URIError);
     expect(error.toString()).toBe(`URIError: Error while loading ${ERR_URL}`);
