@@ -17,7 +17,7 @@ const swrFetch = async ({
   const cacheStorage = await caches.open(DEFAULT_CACHE_NAME);
   const cachedResponse = await cacheStorage.match(url);
   const inCache = cachedResponse?.ok;
-  const target = makeUrl(url, base);
+  const target = makeUrl(url, base, relative);
 
   const strategy = {
     stale: inCache && /stale/.test(cacheStrategy),

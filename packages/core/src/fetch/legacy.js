@@ -1,7 +1,7 @@
 import { url as makeUrl } from '../utils/url';
 
-const legacyFetch = ({ url, base }) => new Promise((resolve, reject) => {
-  const target = makeUrl(url, base);
+const legacyFetch = ({ url, base, relative }) => new Promise((resolve, reject) => {
+  const target = makeUrl(url, base, relative);
   const error = new URIError(`Error while loading ${target.href}`);
   const request = new XMLHttpRequest();
 
