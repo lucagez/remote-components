@@ -1,7 +1,8 @@
 const COMPONENTS_SCOPE = new Map();
 
 /**
- * CRUD utilities to interact with local SCOPE.
+ * CRUD utilities to interact with local SCOPE
+ * without exposing main registry directly.
  */
 const getComponent = (dependency) => {
   return COMPONENTS_SCOPE.get(dependency);
@@ -24,4 +25,5 @@ export {
   registerComponent,
   hasComponent,
   removeComponent,
+  COMPONENTS_SCOPE,
 };
