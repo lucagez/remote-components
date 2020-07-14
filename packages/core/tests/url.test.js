@@ -22,7 +22,7 @@ test('Should return URL object', async () => {
     const target = url('http://url.com');
 
     expect(target).toBeInstanceOf(URL);
-    expect(target.href).toBe('http://url.com');
+    expect(target.href).toBe('http://url.com/');
   } catch {}
 });
 

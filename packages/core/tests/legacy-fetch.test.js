@@ -2,14 +2,14 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { legacyFetch } from '../src/fetch';
 
-const DUMMY_URL = 'http://dummy.com';
+const DUMMY_URL = 'http://dummy.com/';
 const DUMMY_RES = `
 module.exports = {
   Component: () => console.log('DUMMY'),
   name: 'dummy',
 }
 `;
-const ERR_URL = 'http://err.com'
+const ERR_URL = 'http://err.com/'
 
 const server = setupServer(
   rest.get(DUMMY_URL, (_, res, ctx) => {
