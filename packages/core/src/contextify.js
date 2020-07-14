@@ -32,7 +32,7 @@ const contextify = (resolution, source, dependencies) => {
   register(dependencies);
   registerComponent(resolution, _module.exports);
 
-  new Function('module', 'exports', 'require', source)(
+  return new Function('module', 'exports', 'require', source)(
     _module,
     _module.exports,
     _require,
