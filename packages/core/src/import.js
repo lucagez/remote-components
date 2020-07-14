@@ -7,6 +7,8 @@ const remoteImport = async ({
   url,
   dependencies = {},
   cacheStrategy = 'none',
+  base,
+  relative,
 }) => {
   const fetchSource =
     modern && cacheStrategy !== 'none' ? swrFetch : legacyFetch;
@@ -15,7 +17,12 @@ const remoteImport = async ({
     return getComponent(url);
   }
 
-  const source = await fetchSource(url, cacheStrategy);
+  const source = await fetchSource({
+    url,
+    cacheStrategy,
+    base,
+    relative,
+  });
 
   /**
    * Evaluating source in a mocked context.

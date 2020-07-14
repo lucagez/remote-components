@@ -1,6 +1,9 @@
-const legacyFetch = (url) => new Promise((resolve, reject) => {
+import { url as makeUrl } from '../utils/url';
+
+const legacyFetch = ({ url, base, relative }) => new Promise((resolve, reject) => {
+  const target = makeUrl(url, base, relative);
+  const error = new URIError(`Error while loading ${target.href}`);
   const request = new XMLHttpRequest();
-  const error = new URIError(`Error while loading ${url}`);
 
   request.onreadystatechange = () => {
     if (request.readyState !== 4) return;
@@ -13,7 +16,7 @@ const legacyFetch = (url) => new Promise((resolve, reject) => {
 
   request.onerror = () => reject(error);
 
-  request.open('GET', url, true);
+  request.open('GET', target.href, true);
   request.send(null);
 });
 

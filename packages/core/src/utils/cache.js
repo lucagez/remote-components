@@ -1,4 +1,4 @@
-import { modern } from './features'; 
+import { modern } from '../features'; 
 
 const DEFAULT_CACHE_NAME = '__REMOTE_COMPONENTS__v1';
 
