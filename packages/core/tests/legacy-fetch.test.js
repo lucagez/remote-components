@@ -35,27 +35,63 @@ afterAll(() => {
   server.close();
 });
 
-test('Should fetch source', async () => {
-  const source = await legacyFetch({ url: DUMMY_URL });
+test('Should fetch source', (done) => {
+  expect.assertions(1);
 
-  expect(source).toBe(DUMMY_RES);
+  legacyFetch({
+    url: DUMMY_URL,
+    onDone: source => {
+      expect(source).toBe(DUMMY_RES);
+      done();
+    },
+    onError: () => {
+      done.fail();
+    }
+  });
 });
 
-test('Should throw on server error', () => {
-  return expect(legacyFetch({ url: ERR_URL }))
-    .rejects
-    .toThrow();
+test('Should throw on server error', (done) => {
+  expect.assertions(2);
+
+  const spy = jest.fn();
+
+  legacyFetch({
+    url: ERR_URL,
+    onDone: () => {
+      spy();
+      done.fail();
+    },
+    onError: (error) => {
+      expect(error).toBeInstanceOf(Error);
+      done();
+    },
+  });
+
+  expect(spy).not.toBeCalled();
 });
 
 test('Should return URI error on fetch error', async done => {
-  expect.assertions(2);
+  expect.assertions(3);
 
-  try {
-    await legacyFetch({ url: ERR_URL });
-  } catch (error) {
-    expect(error).toBeInstanceOf(URIError);
-    expect(error.toString()).toBe(`URIError: Error while loading ${ERR_URL}`);
+  const spy = jest.fn();
 
-    done();
-  }
+  legacyFetch({
+    url: ERR_URL,
+    onDone: () => {
+      spy();
+      done.fail();
+    },
+    onError: (error) => {
+      expect(error).toBeInstanceOf(URIError);
+      expect(error.toString()).toBe(`URIError: Error while loading ${ERR_URL}`);
+
+      done();
+    },
+  });
+
+  expect(spy).not.toBeCalled();
 });
+
+/**
+ * TODO: add tests for relative urls
+ */
