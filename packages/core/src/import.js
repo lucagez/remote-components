@@ -9,15 +9,11 @@ const remoteImport = ({
   cacheStrategy = 'none',
   base,
   relative,
-  onDone,
-  onError,
+  onDone = () => void 0,
+  onError = () => void 0,
 }) => {
   const fetchSource =
     modern && cacheStrategy !== 'none' ? swrFetch : legacyFetch;
-
-  if (hasComponent(url)) {
-    return getComponent(url);
-  }
 
   const execContext = (source) => {
     try {
@@ -36,24 +32,28 @@ const remoteImport = ({
     }
   };
 
-  /**
-   * Preferring a cb approach over a Promise based one.
-   * A promise can be fulfilled only once and they are not the best
-   * choice for recurring events.
-   * e.g. In this case the content can be retrieved twice:
-   * - first time as stale, from cache
-   * - second time, as fresh source
-   * 
-   * SPEC: https://www.w3.org/2001/tag/doc/promises-guide#recurring-events
-   */
-  fetchSource({
-    url,
-    cacheStrategy,
-    base,
-    relative,
-    onError,
-    onDone: execContext,
-  });
+  if (hasComponent(url)) {
+    onDone(getComponent(url));
+  } else {
+    /**
+     * Preferring a cb approach over a Promise based one.
+     * A promise can be fulfilled only once and they are not the best
+     * choice for recurring events.
+     * e.g. In this case the content can be retrieved twice:
+     * - first time as stale, from cache
+     * - second time, as fresh source
+     * 
+     * SPEC: https://www.w3.org/2001/tag/doc/promises-guide#recurring-events
+     */
+    fetchSource({
+      url,
+      cacheStrategy,
+      base,
+      relative,
+      onError,
+      onDone: execContext,
+    });
+  }
 };
 
 export { remoteImport };

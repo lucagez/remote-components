@@ -30,7 +30,7 @@ afterAll(() => {
   server.close();
 });
 
-test('Should reach network layer if module is not registered', async () => {
+test('Should reach network layer if module is not registered', (done) => {
   expect.assertions(1);
 
   try {
@@ -42,15 +42,30 @@ test('Should reach network layer if module is not registered', async () => {
       }),
     );
 
-    await remoteImport({ url: 'http://mocked.com' });
+    remoteImport({
+      url: 'http://mocked.com',
+      cacheStrategy: 'none',
+      onDone: () => {
+        done();
+      },
+    });
   } catch {}
 });
 
-test('Should return registered module', async () => {
-  const _module = await remoteImport({ url: DUMMY_URL });
+test('Should return registered module', (done) => {
+  expect.assertions(2);
 
-  expect(_module).toBeInstanceOf(Object);
-  expect(_module.default).toBe('dummy');
+  remoteImport({
+    url: DUMMY_URL,
+    cacheStrategy: 'none',
+    onError: () => done.fail(),
+    onDone: (_module) => {
+      expect(_module).toBeInstanceOf(Object);
+      expect(_module.default).toBe('dummy');
+
+      done();
+    },
+  });
 });
 
 test('Should not reach network layer when module is already registered', async () => {
@@ -65,12 +80,24 @@ test('Should not reach network layer when module is already registered', async (
       }),
     );
 
-    const _moduleA = await remoteImport({ url: 'http://mocked.com' });
+    const _moduleA = await new Promise((resolve) =>
+      remoteImport({
+        url: 'http://mocked.com',
+        cacheStrategy: 'none',
+        onDone: (_module) => resolve(_module),
+      }),
+    );
 
     expect(_moduleA).toBeInstanceOf(Object);
     expect(_moduleA.default).toBe('dummy');
 
-    const _moduleB = await remoteImport({ url: 'http://mocked.com' });
+    const _moduleB = await new Promise((resolve) =>
+      remoteImport({
+        url: 'http://mocked.com',
+        cacheStrategy: 'none',
+        onDone: (_module) => resolve(_module),
+      }),
+    );
 
     expect(_moduleB).toBeInstanceOf(Object);
     expect(_moduleB.default).toBe('dummy');
@@ -79,123 +106,138 @@ test('Should not reach network layer when module is already registered', async (
   } catch {}
 });
 
-test('Should forward dependencies to contextify', async () => {
+test('Should forward dependencies to contextify', (done) => {
   expect.assertions(3);
 
-  try {
-    server.use(
-      rest.get('http://mocked.com', (_, res, ctx) => {
-        expect(ctx).toBeTruthy();
+  server.use(
+    rest.get('http://mocked.com', (_, res, ctx) => {
+      expect(ctx).toBeTruthy();
 
-        return res(
-          ctx.delay(10),
-          ctx.status(200),
-          ctx.text(
-            `
+      return res(
+        ctx.delay(10),
+        ctx.status(200),
+        ctx.text(
+          `
               module.exports = require('dummy');
             `,
-          ),
-        );
-      }),
-    );
+        ),
+      );
+    }),
+  );
 
-    const _module = await remoteImport({
-      url: 'http://mocked.com',
-      dependencies: {
-        dummy: 42,
-      },
-    });
+  remoteImport({
+    url: 'http://mocked.com',
+    cacheStrategy: 'none',
+    dependencies: {
+      dummy: 42,
+    },
+    onDone: (_module) => {
+      expect(_module).toBeInstanceOf(Object);
+      expect(_module.default).toBe(42);
 
-    expect(_module).toBeInstanceOf(Object);
-    expect(_module.default).toBe(42);
-  } catch {}
+      done();
+    },
+    onError: done.fail,
+  });
 });
 
-test('Should register module in main scope', async () => {
+test('Should register module in main scope', (done) => {
   expect.assertions(3);
 
-  const _module = await remoteImport({
+  remoteImport({
     url: DUMMY_URL,
+    cacheStrategy: 'none',
+    onDone: (_module) => {
+      expect(_module).toBeInstanceOf(Object);
+      expect(_module.default).toBe('dummy');
+
+      expect(getComponent(DUMMY_URL).default).toBe('dummy');
+
+      done();
+    },
   });
-
-  expect(_module).toBeInstanceOf(Object);
-  expect(_module.default).toBe('dummy');
-
-  expect(getComponent(DUMMY_URL).default).toBe('dummy');
 });
 
-test('Should throw on network failure and unknown component', async () => {
+test('Should throw on network failure and unknown component', (done) => {
   expect.assertions(1);
 
-  try {
-    await remoteImport({ url: ERR_URL });
-  } catch (error) {
-    expect(error).toBeInstanceOf(Error);
-  }
+  remoteImport({
+    url: ERR_URL,
+    cacheStrategy: 'none',
+    onError: (error) => {
+      expect(error).toBeInstanceOf(Error);
+
+      done();
+    },
+  });
 });
 
-test('Should import module from relative url', async () => {
+test('Should import module from relative url', (done) => {
   expect.assertions(3);
 
-  try {
-    server.use(
-      rest.get('http://localhost/path', (_, res, ctx) => {
-        expect(ctx).toBeTruthy();
+  server.use(
+    rest.get('http://localhost/path', (_, res, ctx) => {
+      expect(ctx).toBeTruthy();
 
-        return res(
-          ctx.delay(10),
-          ctx.status(200),
-          ctx.text(
-            `
+      return res(
+        ctx.delay(10),
+        ctx.status(200),
+        ctx.text(
+          `
               module.exports = require('dummy');
             `,
-          ),
-        );
-      }),
-    );
+        ),
+      );
+    }),
+  );
 
-    const _module = await remoteImport({
-      url: 'path',
-      relative: true,
-      dependencies: {
-        dummy: 42,
-      },
-    });
+  remoteImport({
+    url: 'path',
+    relative: true,
+    dependencies: {
+      dummy: 42,
+    },
+    cacheStrategy: 'none',
+    onDone: (_module) => {
+      expect(_module).toBeInstanceOf(Object);
+      expect(_module.default).toBe(42);
 
-    expect(_module).toBeInstanceOf(Object);
-    expect(_module.default).toBe(42);
-  } catch {}
+      done();
+    },
+  });
 });
 
-test('Should import module using base url', async () => {
+test('Should import module using base url', (done) => {
   expect.assertions(3);
 
-  try {
-    server.use(
-      rest.get('http://pino.com/path', (_, res, ctx) => {
-        expect(ctx).toBeTruthy();
+  server.use(
+    rest.get('http://pino.com/path', (_, res, ctx) => {
+      expect(ctx).toBeTruthy();
 
-        return res(
-          ctx.delay(10),
-          ctx.status(200),
-          ctx.text(
-            `
+      return res(
+        ctx.delay(10),
+        ctx.status(200),
+        ctx.text(
+          `
               module.exports = require('dummy');
             `,
-          ),
-        );
-      }),
-    );
+        ),
+      );
+    }),
+  );
 
-    const _module = await remoteImport({
-      url: 'path',
-      base: 'http://pino.com',
-      dependencies: {
-        dummy: 42,
-      },
-    });
+  remoteImport({
+    url: 'path',
+    base: 'http://pino.com',
+    dependencies: {
+      dummy: 42,
+    },
+    cacheStrategy: 'none',
+    onDone: (_module) => {
+      expect(_module).toBeInstanceOf(Object);
+      expect(_module.default).toBe(42);
 
-    expect(_module).toBeInstanceOf(Object);
-    expect(_module.default).toBe(42);
-  } catch {}
+      done();
+    },
+  });
 });
