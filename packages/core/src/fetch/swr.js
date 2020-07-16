@@ -13,7 +13,6 @@ const swrFetch = async ({
   cacheStrategy = 'none',
   base,
   relative,
-  onCache = () => void 0,
   onDone = () => void 0,
   onError = () => void 0,
 }) => {
