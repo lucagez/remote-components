@@ -12,7 +12,9 @@ const swrFetch = async ({
   url,
   cacheStrategy = 'none',
   base,
-  relative
+  relative,
+  onDone = () => void 0,
+  onError = () => void 0,
 }) => {
   const cacheStorage = await caches.open(DEFAULT_CACHE_NAME);
   const cachedResponse = await cacheStorage.match(url);
@@ -26,7 +28,7 @@ const swrFetch = async ({
   };
 
   if (inCache) {
-    return cachedResponse.text();
+    onDone(await cachedResponse.text());
   }
 
   try {
@@ -41,10 +43,10 @@ const swrFetch = async ({
     }
 
     if (strategy.rerender) {
-      return response.text();
+      onDone(await response.text());
     }
   } catch {
-    throw new URIError(`Error while loading ${target.href}`);
+    onError(new URIError(`Error while loading ${target.href}`));
   }
 };
 

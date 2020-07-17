@@ -1,34 +1,13 @@
 import 'regenerator-runtime/runtime';
 import '@testing-library/jest-dom';
 
-/**
- * TODO: test swr in chrome to avoid dangerous mocks
- */
-// window.Cache = {};
-// window.caches = {
-//   store: {},
+import Cache from './mocks/Cache';
+import CacheStorage from './mocks/CacheStorage';
+import Request from './mocks/Request';
+import Response from './mocks/Response';
 
-//   async open(name) {
-//     const cachedCache = this.store[name];
-
-//     if (cachedCache) {
-//       return cachedCache;
-//     }
-
-//     const cache = {};
-
-//     cache.match = (url) => {
-//       const key = Object
-//         .keys(cache)
-//         .find(req => req.url === url);
-
-//       return this.store[key];
-//     };
-
-//     cache.put = (req, res) => {
-//       return this.store[req] = res;
-//     };
-
-//     return this.store[name] = cache;
-//   },
-// };
+window.fetch = () => {};
+window.Cache = Cache;
+window.caches = new CacheStorage();
+window.Request = Request;
+window.Response = Response;
