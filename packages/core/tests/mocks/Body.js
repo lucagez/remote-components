@@ -4,10 +4,6 @@
 
 const Blob = require('./Blob');
 
-const throwBodyUsed = (method) => {
-  throw new TypeError(`Failed to execute '${method}': body is already used`);
-};
-
 class Body {
   constructor(body) {
     this.bodyUsed = false;
@@ -30,8 +26,6 @@ class Body {
   }
 
   resolve(name, resolver) {
-    if (this.bodyUsed) throwBodyUsed(name);
-    this.bodyUsed = true;
     return Promise.resolve(resolver(this.body));
   }
 }

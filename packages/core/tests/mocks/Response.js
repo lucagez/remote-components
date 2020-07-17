@@ -6,16 +6,8 @@
 const Body = require('./Body');
 const Headers = require('./Headers');
 
-const isSupportedBodyType = (body) =>
-  (body === null) ||
-  (body instanceof Blob) ||
-  (typeof body === 'string');
-
 class Response extends Body {
   constructor(body = null, options = {}) {
-    if (!isSupportedBodyType(body)) {
-      throw new TypeError('Response body must be one of: Blob, USVString, null');
-    }
     super(body, options);
     this.status = typeof options.status === 'number'
       ? options.status

@@ -60,9 +60,9 @@ const useRemote = ({
       url,
       dependencies,
       cacheStrategy,
-    })
-      .then(onDone)
-      .catch(onError);
+      onDone,
+      onError,
+    });
   }, [retry]);
 
   return data;
