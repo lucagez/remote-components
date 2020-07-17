@@ -1,7 +1,12 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { useRemote } from '../dist/remote.cjs';
+import { registerDependencies, removeModule } from '@remote-components/core';
+import { useRemote } from '../src/use-remote';
+
+registerDependencies({
+  'test': 'DUMMY',
+});
 
 const server = setupServer(
   rest.get('http://dummy.com/component.js', (req, res, ctx) => {
@@ -13,6 +18,15 @@ const server = setupServer(
           Component: () => console.log('DUMMY'),
           name: 'dummy',
         }
+      `),
+    );
+  }),
+  rest.get('http://dummy.com/withDependency.js', (req, res, ctx) => {
+    return res(
+      ctx.delay(100),
+      ctx.status(200),
+      ctx.text(`
+        module.exports = require('test');
       `),
     );
   }),
@@ -38,6 +52,13 @@ const server = setupServer(
     );
   }),
 );
+
+beforeEach(() => {
+  removeModule('http://dummy.com/component.js');
+  removeModule('http://dummy.com/wrong.js');
+  removeModule('http://dummy.com/withDependency.js');
+  removeModule('http://dummy.com/nothing.js');
+});
 
 beforeAll(() => {
   server.listen();
@@ -140,4 +161,34 @@ test('should retry n times after failure', async () => {
   await waitForNextUpdate();
 
   expect(result.current.error).toBeInstanceOf(URIError);
+});
+
+test('Should load modules that rely on dependencies', async () => {
+
+  const { result, waitForNextUpdate } = renderHook(() =>
+    useRemote({
+      name: 'wrong',
+      url: 'http://dummy.com/withDependency.js',
+    }),
+  );
+
+  await waitForNextUpdate();
+
+  expect(result.current.data.default).toBe('DUMMY');
+});
+
+test('Should load modules with custom scope', async () => {
+  const { result, waitForNextUpdate } = renderHook(() =>
+    useRemote({
+      name: 'wrong',
+      dependencies: {
+        'test': 'DIFFERENT_FROM_DEFAULT',
+      },
+      url: 'http://dummy.com/withDependency.js',
+    }),
+  );
+
+  await waitForNextUpdate();
+
+  expect(result.current.data.default).toBe('DIFFERENT_FROM_DEFAULT');
 });

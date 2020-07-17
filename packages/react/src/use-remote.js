@@ -56,6 +56,9 @@ const useRemote = ({
   useEffect(() => {
     setData({ loading: true });
 
+    /**
+     * TODO: add relative and base
+     */
     remoteImport({
       url,
       dependencies,
