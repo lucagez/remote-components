@@ -43,6 +43,7 @@ test('Should fetch source', (done) => {
 
 test('Should not pollute cache before fetching', async (done) => {
   expect.assertions(2);
+
   fetch.mockImplementationOnce(() => Promise.resolve(new Response(DUMMY_RES)));
 
   const cache = await caches.open(DEFAULT_CACHE_NAME);
@@ -76,6 +77,52 @@ test('Should trigger onError event on failure', (done) => {
     onDone: done.fail,
   });
 });
+
+
+test('Should fetch source on relative url', (done) => {
+  expect.assertions(2);
+
+  fetch.mockImplementationOnce((req) => {
+    expect(req.url).toBe('http://localhost/dummy.js');
+
+    return Promise.resolve(new Response(DUMMY_RES))
+  });
+
+  swrFetch({
+    url: 'dummy.js',
+    relative: true,
+    onDone: source => {
+      expect(source).toBe(DUMMY_RES);
+      done();
+    },
+    onError: () => {
+      done.fail();
+    }
+  });
+});
+
+test('Should fetch source with custom base url', (done) => {
+  expect.assertions(2);
+
+  fetch.mockImplementationOnce((req) => {
+    expect(req.url).toBe('http://localhost/dummy.js');
+
+    return Promise.resolve(new Response(DUMMY_RES))
+  });
+
+  swrFetch({
+    url: 'dummy.js',
+    base: 'http://localhost',
+    onDone: source => {
+      expect(source).toBe(DUMMY_RES);
+      done();
+    },
+    onError: () => {
+      done.fail();
+    }
+  });
+});
+
 
 /**
  * STALE

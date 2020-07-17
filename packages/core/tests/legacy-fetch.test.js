@@ -25,6 +25,13 @@ const server = setupServer(
       ctx.status(500),
     );
   }),
+  rest.get('http://localhost/dummy.js', (_, res, ctx) => {
+    return res(
+      ctx.delay(10),
+      ctx.status(200),
+      ctx.text(DUMMY_RES),
+    );
+  }),
 );
 
 beforeAll(() => {
@@ -92,6 +99,34 @@ test('Should return URI error on fetch error', async done => {
   expect(spy).not.toBeCalled();
 });
 
-/**
- * TODO: add tests for relative urls
- */
+test('Should fetch source on relative url', (done) => {
+  expect.assertions(1);
+
+  legacyFetch({
+    url: 'dummy.js',
+    relative: true,
+    onDone: source => {
+      expect(source).toBe(DUMMY_RES);
+      done();
+    },
+    onError: () => {
+      done.fail();
+    }
+  });
+});
+
+test('Should fetch source with custom base url', (done) => {
+  expect.assertions(1);
+
+  legacyFetch({
+    url: 'dummy.js',
+    base: 'http://localhost',
+    onDone: source => {
+      expect(source).toBe(DUMMY_RES);
+      done();
+    },
+    onError: () => {
+      done.fail();
+    }
+  });
+});
