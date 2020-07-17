@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { remoteImport, removeComponent } from '@remote-components/core';
+import { remoteImport, removeModule } from '@remote-components/core';
 
 /**
  * useRemote.
@@ -44,7 +44,7 @@ const useRemote = ({
 
   const onRetry = () => {
     if (retry) setRetry(retry - 1);
-    removeComponent(url);
+    removeModule(url);
   };
 
   const onError = (error) => {

@@ -1,29 +1,29 @@
-const COMPONENTS_SCOPE = new Map();
+const MODULES_SCOPE = new Map();
 
 /**
  * CRUD utilities to interact with local SCOPE
  * without exposing main registry directly.
  */
-const getComponent = (dependency) => {
-  return COMPONENTS_SCOPE.get(dependency);
+const getModule = (_module) => {
+  return MODULES_SCOPE.get(_module);
 };
 
-const registerComponent = (dependency, value) => {
-  return COMPONENTS_SCOPE.set(dependency, value);
+const registerModule = (_module, value) => {
+  return MODULES_SCOPE.set(_module, value);
 };
 
-const hasComponent = (dependency) => {
-  return COMPONENTS_SCOPE.has(dependency);
+const hasModule = (_module) => {
+  return MODULES_SCOPE.has(_module);
 };
 
-const removeComponent = (dependency) => {
-  return COMPONENTS_SCOPE.delete(dependency);
+const removeModule = (_module) => {
+  return MODULES_SCOPE.delete(_module);
 };
 
 export {
-  getComponent,
-  registerComponent,
-  hasComponent,
-  removeComponent,
-  COMPONENTS_SCOPE,
+  getModule,
+  registerModule,
+  hasModule,
+  removeModule,
+  MODULES_SCOPE,
 };

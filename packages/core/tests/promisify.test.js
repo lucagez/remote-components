@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { remoteImport, promisify } from '../src/import';
-import { COMPONENTS_SCOPE } from '../src/scopes/components';
+import { MODULES_SCOPE } from '../src/scopes/components';
 
 const _import = promisify(remoteImport);
 
@@ -21,7 +21,7 @@ const server = setupServer(
 );
 
 beforeEach(() => {
-  COMPONENTS_SCOPE.clear();
+  MODULES_SCOPE.clear();
 });
 
 beforeAll(() => {

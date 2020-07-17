@@ -1,6 +1,6 @@
 import { swrFetch, legacyFetch } from './fetch';
 import { modern } from './features';
-import { hasComponent, getComponent } from './scopes';
+import { hasModule, getModule } from './scopes';
 import { contextify } from './contextify';
 
 const remoteImport = ({
@@ -26,14 +26,14 @@ const remoteImport = ({
        */
       contextify(url, source, dependencies);
     
-      onDone(getComponent(url));
+      onDone(getModule(url));
     } catch(error) {
       onError(error);
     }
   };
 
-  if (hasComponent(url)) {
-    onDone(getComponent(url));
+  if (hasModule(url)) {
+    onDone(getModule(url));
   } else {
     /**
      * Preferring a cb approach over a Promise based one.
