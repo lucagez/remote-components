@@ -56,4 +56,15 @@ const remoteImport = ({
   }
 };
 
-export { remoteImport };
+const promisify = (_import) => {
+  return (options) => new Promise((resolve, reject) => {
+    _import({
+      ...options,
+      cacheStrategy: 'none',
+      onDone: resolve,
+      onError: reject,
+    });
+  });
+};
+
+export { remoteImport, promisify };
