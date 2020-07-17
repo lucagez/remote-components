@@ -18,6 +18,8 @@ const legacyFetch = ({
     } else {
       onError(error);
     }
+
+    request.onreadystatechange = null;
   };
 
   request.onerror = () => onError(error);
