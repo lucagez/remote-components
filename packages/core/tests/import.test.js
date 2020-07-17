@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { COMPONENTS_SCOPE, getComponent } from '../src/scopes/components';
+import { MODULES_SCOPE, getModule } from '../src/scopes/components';
 import { remoteImport } from '../src/import';
 
 const DUMMY_URL = 'http://dummy.com';
@@ -19,7 +19,7 @@ const server = setupServer(
 );
 
 beforeEach(() => {
-  COMPONENTS_SCOPE.clear();
+  MODULES_SCOPE.clear();
 });
 
 beforeAll(() => {
@@ -151,7 +151,7 @@ test('Should register module in main scope', (done) => {
       expect(_module).toBeInstanceOf(Object);
       expect(_module.default).toBe('dummy');
 
-      expect(getComponent(DUMMY_URL).default).toBe('dummy');
+      expect(getModule(DUMMY_URL).default).toBe('dummy');
 
       done();
     },

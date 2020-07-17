@@ -1,9 +1,9 @@
 import { contextify } from '../src/contextify';
 import { SCOPE, registerDependencies } from '../src/scopes/dependencies';
-import { getComponent, COMPONENTS_SCOPE } from '../src/scopes/components';
+import { getModule, MODULES_SCOPE } from '../src/scopes/components';
 
 beforeEach(() => {
-  COMPONENTS_SCOPE.clear();
+  MODULES_SCOPE.clear();
   SCOPE.clear();
 });
 
@@ -138,8 +138,8 @@ test('Context should be able to export module', async () => {
   try {
     contextify('test', source, {});
 
-    expect(getComponent('test')).toBeInstanceOf(Object);
-    expect(getComponent('test').prop).toBe(42);
+    expect(getModule('test')).toBeInstanceOf(Object);
+    expect(getModule('test').prop).toBe(42);
   } catch {}
 });
 
@@ -154,9 +154,9 @@ test('Context should be able to export modules', async () => {
   try {
     contextify('test', source, {});
 
-    expect(getComponent('test')).toBeInstanceOf(Object);
-    expect(getComponent('test').propA).toBe(42);
-    expect(getComponent('test').propB).toBe(42);
+    expect(getModule('test')).toBeInstanceOf(Object);
+    expect(getModule('test').propA).toBe(42);
+    expect(getModule('test').propB).toBe(42);
   } catch {}
 });
 
@@ -171,8 +171,8 @@ test('Context should be able to export default', async () => {
   try {
     contextify('test', source, {});
 
-    expect(getComponent('test')).toBeInstanceOf(Object);
-    expect(getComponent('test').default).toBe(42);
+    expect(getModule('test')).toBeInstanceOf(Object);
+    expect(getModule('test').default).toBe(42);
   } catch {}
 });
 
@@ -187,8 +187,8 @@ test('Exports should be able to access required modules', async () => {
   try {
     contextify('test', source, dependencies);
 
-    expect(getComponent('test')).toBeInstanceOf(Object);
-    expect(getComponent('test').default).toBe(42);
+    expect(getModule('test')).toBeInstanceOf(Object);
+    expect(getModule('test').default).toBe(42);
   } catch {}
 });
 
@@ -207,7 +207,7 @@ test('Context should rely on scoped registry', async () => {
   try {
     contextify('test', source, dependencies);
 
-    expect(getComponent('test')).toBeInstanceOf(Object);
-    expect(getComponent('test').default).toBe('CHILD');
+    expect(getModule('test')).toBeInstanceOf(Object);
+    expect(getModule('test').default).toBe('CHILD');
   } catch {}
 });

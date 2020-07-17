@@ -1,4 +1,4 @@
-import { SCOPE, createScope, createModule, registerComponent } from './scopes';
+import { SCOPE, createScope, createModule, registerModule } from './scopes';
 
 /**
  * Contextifying module, exports, require.
@@ -30,7 +30,7 @@ const contextify = (resolution, source, dependencies) => {
    * Therefore, dependecies could potentially be lazy loaded
    */
   register(dependencies);
-  registerComponent(resolution, _module.exports);
+  registerModule(resolution, _module.exports);
 
   return new Function('module', 'exports', 'require', source)(
     _module,
