@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { remoteImport, removeModule } from '@remote-components/core';
+import { remotes } from '@remote-components/core';
 
 /**
  * useRemote.
@@ -44,7 +44,7 @@ const useRemote = ({
 
   const onRetry = () => {
     if (retry) setRetry(retry - 1);
-    removeModule(url);
+    remotes.remove(url);
   };
 
   const onError = (error) => {
@@ -59,7 +59,7 @@ const useRemote = ({
     /**
      * TODO: add relative and base
      */
-    remoteImport({
+    remotes.import({
       url,
       dependencies,
       cacheStrategy,

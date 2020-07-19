@@ -18,7 +18,7 @@ const Dummy = Remote({
   Error: ({ error, reset }) => <h1 onClick={reset}>{error.toString()}</h1>,
   timeout: 2000,
   retries: 1,
-  cacheStrategy: 'none',
+  cacheStrategy: 'rerender',
 });
 
 const App = () => {
@@ -31,6 +31,8 @@ const App = () => {
       <button onClick={() => setState(prev => prev + 1)}>INCREMENT</button>
 
       {state % 2 !== 0 && <Dummy description={`CIAO`} />}
+
+      <Dummy description="CIAONE" />
     </>
   );
 };
