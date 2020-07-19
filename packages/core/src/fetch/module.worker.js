@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 /**
  * TODO: add better web worker loader support
  */

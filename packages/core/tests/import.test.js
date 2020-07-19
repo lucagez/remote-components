@@ -7,11 +7,18 @@ const DUMMY_URL = 'http://dummy.com';
 const DUMMY_RES = `
   module.exports = 'dummy'
 `;
+const BROKEN_URL = 'http://broken.com';
+const BROKEN_RES = `
+  module.exports =<: 'dummy'
+`;
 const ERR_URL = 'http://err.com';
 
 const server = setupServer(
   rest.get(DUMMY_URL, (_, res, ctx) => {
     return res(ctx.delay(10), ctx.status(200), ctx.text(DUMMY_RES));
+  }),
+  rest.get(BROKEN_URL, (_, res, ctx) => {
+    return res(ctx.delay(10), ctx.status(200), ctx.text(BROKEN_RES));
   }),
   rest.get(ERR_URL, (_, res, ctx) => {
     return res(ctx.delay(10), ctx.status(500));
@@ -163,6 +170,20 @@ test('Should throw on network failure and unknown component', (done) => {
 
   remoteImport({
     url: ERR_URL,
+    cacheStrategy: 'none',
+    onError: (error) => {
+      expect(error).toBeInstanceOf(Error);
+
+      done();
+    },
+  });
+});
+
+test('Should throw on parsing failure and unknown component', (done) => {
+  expect.assertions(1);
+
+  remoteImport({
+    url: BROKEN_URL,
     cacheStrategy: 'none',
     onError: (error) => {
       expect(error).toBeInstanceOf(Error);

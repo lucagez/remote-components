@@ -2,6 +2,7 @@ import { swrFetch, legacyFetch } from './fetch';
 import { modern } from './features';
 import { hasModule, getModule } from './scopes';
 import { contextify } from './contextify';
+import { noop } from './utils/noop';
 
 const remoteImport = ({
   url,
@@ -9,8 +10,8 @@ const remoteImport = ({
   cacheStrategy = 'none',
   base,
   relative,
-  onDone = () => void 0,
-  onError = () => void 0,
+  onDone = noop,
+  onError = noop,
 }) => {
   const fetchSource =
     modern && cacheStrategy !== 'none' ? swrFetch : legacyFetch;

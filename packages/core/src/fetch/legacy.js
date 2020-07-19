@@ -1,11 +1,12 @@
 import { url as makeUrl } from '../utils/url';
+import { noop } from '../utils/noop';
 
 const legacyFetch = ({
   url,
   base,
   relative,
-  onDone = () => void 0,
-  onError = () => void 0,
+  onDone = noop,
+  onError = noop,
 }) => {
   const target = makeUrl(url, base, relative);
   const error = new URIError(`Error while loading ${target.href}`);
