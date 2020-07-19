@@ -3,6 +3,9 @@
   "version": "0.1.1",
   "description": "Core functionality of remote-components",
   "author": "lucagez <lucagesmundo@yahoo.it>",
+  "publishConfig": {
+    "access": "public"
+  },
   "homepage": "https://github.com/lucagez/remote-components#readme",
   "license": "ISC",
   "main": "dist/remote-core.cjs.js",
@@ -71,5 +74,6 @@
   },
   "bugs": {
     "url": "https://github.com/lucagez/remote-components/issues"
-  }
+  },
+  "gitHead": "ffb7455d9eaa9a5c2c29d8f9c64a39ac4cd11d4f"
 }
