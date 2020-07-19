@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { remoteImport, promisify } from '../src/import';
-import { MODULES_SCOPE } from '../src/scopes/components';
+import { MODULES_SCOPE } from '../src/scopes/modules';
 
 const _import = promisify(remoteImport);
 

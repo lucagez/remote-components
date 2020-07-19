@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { MODULES_SCOPE, getModule } from '../src/scopes/components';
+import { MODULES_SCOPE, getModule } from '../src/scopes/modules';
 import { remoteImport } from '../src/import';
 
 const DUMMY_URL = 'http://dummy.com';

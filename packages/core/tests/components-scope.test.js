@@ -4,7 +4,7 @@ import {
   hasModule,
   removeModule,
   MODULES_SCOPE,
-} from '../src/scopes/components';
+} from '../src/scopes/modules';
 
 beforeEach(() => {
   MODULES_SCOPE.clear();

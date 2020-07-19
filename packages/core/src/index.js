@@ -1,4 +1,5 @@
 
 export { registerDependencies, removeModule } from './scopes';
-export { remoteImport } from './import';
+export { remoteImport, promisify } from './import';
 export { clearCache, clearEntries } from './utils/cache';
+export { remotes } from './remotes';

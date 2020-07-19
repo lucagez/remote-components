@@ -1,6 +1,6 @@
 import { contextify } from '../src/contextify';
 import { SCOPE, registerDependencies } from '../src/scopes/dependencies';
-import { getModule, MODULES_SCOPE } from '../src/scopes/components';
+import { getModule, MODULES_SCOPE } from '../src/scopes/modules';
 
 beforeEach(() => {
   MODULES_SCOPE.clear();
