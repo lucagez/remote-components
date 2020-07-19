@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
 import { Remote } from '@remote-components/react';
@@ -21,6 +21,19 @@ const Dummy = Remote({
   cacheStrategy: 'rerender',
 });
 
+const Wrong = Remote({
+  name: 'wrong',
+  dependencies: {
+    react: React,
+  },
+  url: 'http://localhost:5000/wrong@dev.js',
+  Loading: () => <h1>Loading</h1>,
+  Error: ({ error, reset }) => <h1 onClick={reset}>{error.toString()}</h1>,
+  timeout: 2000,
+  retries: 1,
+  cacheStrategy: 'rerender',
+});
+
 const App = () => {
   const [state, setState] = useState(0);
 
@@ -33,6 +46,8 @@ const App = () => {
       {state % 2 !== 0 && <Dummy description={`CIAO`} />}
 
       <Dummy description="CIAONE" />
+
+      <Wrong />
     </>
   );
 };
