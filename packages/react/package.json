@@ -9,7 +9,7 @@
   "author": "Luca Gesmundo",
   "license": "MIT",
   "scripts": {
-    "build": "NODE_ENV=production rollup -c ./rollup.config.js",
+    "build": "rm -rf ./dist && NODE_ENV=production rollup -c ./rollup.config.js",
     "watch": "rollup -c -w ./rollup.config.js",
     "example": "parcel ./example/index.html --no-autoinstall",
     "dev": "run-p watch example",
