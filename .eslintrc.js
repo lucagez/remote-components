@@ -12,6 +12,9 @@ module.exports = {
     'import/named': 'off',
     'no-restricted-syntax': 'off',
     'consistent-return': 'off',
-    'no-void': 'off'
+    'no-void': 'off',
+    'react/jsx-filename-extension': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'react/prop-types': 'off'
   },
 };

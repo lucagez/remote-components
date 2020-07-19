@@ -25,8 +25,10 @@ import { remotes } from '@remote-components/core';
  * @param {string} config.url - URL of the remote component
  * @param {string} [config.dependencies] - Scoped dependencies.
  * @param {number} [config.timeout] - Time (ms) between retries on errors when fetching.
- * @param {number} [config.retries] - Number of retries when encountring errors while fetching components.
- * @param {('none'|'stale'|'revalidate'|'rerender')} [config.cacheStrategy] - Caching strategy to be used
+ * @param {number} [config.retries] - Number of retries when encountring errors while
+ * fetching components.
+ * @param {('none'|'stale'|'revalidate'|'rerender')} [config.cacheStrategy] - Caching strategy
+ * to be used
  */
 const useRemote = ({
   url,

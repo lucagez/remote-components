@@ -22,15 +22,21 @@ import { ErrorBoundary } from './error-boundary';
  *
  * @param {object} config
  * @param {string} config.url - Remote source
- * @param {object} [config.dependencies] - Dependencies that the host should share with the remote (any import path declared as peerDependency)
- * @param {string} [config.name] - Component name used for stack traces and visualized in component tree
- * @param {number} [config.timeout] - In case of error, number of milliseconds before retrying to fetch component
+ * @param {object} [config.dependencies] - Dependencies that the host should share with
+ * the remote (any import path declared as peerDependency)
+ * @param {string} [config.name] - Component name used for stack traces and visualized
+ * in component tree
+ * @param {number} [config.timeout] - In case of error, number of milliseconds before
+ * retrying to fetch component
  * @param {number} [config.retries] - Number of retries to fetch remote component
  * @param {function} [config.Loading] - Component rendered while fetching remote source
  * @param {function} [config.Error] - Component rendered in case of unexpected errors
- * @param {function} [config.Provider] - Provider Component used to wrap remote inside an explicit context if needed
- * @param {function} [config.onError] - Callback function invoked when an error is catched by the remote error boundary
- * @param {('none'|'stale'|'revalidate'|'rerender')} [config.cacheStrategy] - Caching strategy to be used
+ * @param {function} [config.Provider] - Provider Component used to wrap remote inside
+ * an explicit context if needed
+ * @param {function} [config.onError] - Callback function invoked when an error is
+ * catched by the remote error boundary
+ * @param {('none'|'stale'|'revalidate'|'rerender')} [config.cacheStrategy] - Caching
+ * strategy to be used
  * @return {function} Remote Component
  */
 const Remote = ({
@@ -65,17 +71,21 @@ const Remote = ({
       <Provider>
         <ErrorBoundary
           onError={onError}
-          fallback={({ reset, error: fallbackError }) => <ErrorComp {...props} reset={reset} error={fallbackError} />}
+          fallback={
+            ({ reset, error: fallbackError }) => (
+              <ErrorComp {...props} reset={reset} error={fallbackError} />
+            )
+          }
         >
           <RemoteComp {...props} />
         </ErrorBoundary>
       </Provider>
     );
 
-    const render = (Component) => {
-      const Valid = React.isValidElement(Component)
-        ? Component
-        : React.createElement(Component, {
+    const render = (Comp) => {
+      const Valid = React.isValidElement(Comp)
+        ? Comp
+        : React.createElement(Comp, {
           ...props,
           url,
           error,
