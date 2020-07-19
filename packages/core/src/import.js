@@ -13,8 +13,7 @@ const remoteImport = ({
   onDone = noop,
   onError = noop,
 }) => {
-  const fetchSource =
-    modern && cacheStrategy !== 'none' ? swrFetch : legacyFetch;
+  const fetchSource = modern && cacheStrategy !== 'none' ? swrFetch : legacyFetch;
 
   const execContext = (source) => {
     try {
@@ -26,9 +25,9 @@ const remoteImport = ({
        *  of conflicting dependencies in the same page.
        */
       contextify(url, source, dependencies);
-    
+
       onDone(getModule(url));
-    } catch(error) {
+    } catch (error) {
       onError(error);
     }
   };
@@ -43,7 +42,7 @@ const remoteImport = ({
      * e.g. In this case the content can be retrieved twice:
      * - first time as stale, from cache
      * - second time, as fresh source
-     * 
+     *
      * SPEC: https://www.w3.org/2001/tag/doc/promises-guide#recurring-events
      */
     fetchSource({
@@ -57,15 +56,13 @@ const remoteImport = ({
   }
 };
 
-const promisify = (_import) => {
-  return (options) => new Promise((resolve, reject) => {
-    _import({
-      ...options,
-      cacheStrategy: 'none',
-      onDone: resolve,
-      onError: reject,
-    });
+const promisify = (_import) => (options) => new Promise((resolve, reject) => {
+  _import({
+    ...options,
+    cacheStrategy: 'none',
+    onDone: resolve,
+    onError: reject,
   });
-};
+});
 
 export { remoteImport, promisify };

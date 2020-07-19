@@ -1,4 +1,5 @@
 /* istanbul ignore file */
+/* eslint-disable */
 
 /**
  * TODO: add better web worker loader support

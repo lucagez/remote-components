@@ -23,7 +23,7 @@ jobs:
       run: yarn install
       working-directory: packages/react
     - run: yarn build
-    - run: yarn test
-      working-directory: packages/react
+    - run: yarn lint:react
+    - run: yarn test:react
       env:
         CI: true

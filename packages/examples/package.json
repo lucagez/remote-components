@@ -12,6 +12,8 @@
 		"client": "parcel ./client/index.html"
 	},
 	"devDependencies": {
+		"eslint": "^7.5.0",
+		"eslint-config-airbnb": "^18.2.0",
 		"parcel-bundler": "^1.12.4"
 	},
 	"dependencies": {

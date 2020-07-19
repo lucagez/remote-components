@@ -3,20 +3,16 @@ import React from 'react';
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
+
+    const { onError = (() => void 0) } = this.props;
+
     this.state = {
       panic: false,
       error: null,
     };
-    this.onError = this.props.onError || (() => void 0);
+    this.onError = onError;
     this.reset = this.reset.bind(this);
   }
-
-  reset() {
-    this.setState({
-      panic: false,
-      error: null,
-    });
-  };
 
   static getDerivedStateFromError(error) {
     return {
@@ -29,13 +25,23 @@ class ErrorBoundary extends React.Component {
     this.onError(error, info);
   }
 
+  reset() {
+    this.setState({
+      panic: false,
+      error: null,
+    });
+  }
+
   render() {
-    return this.state.panic
-      ? this.props.fallback({
-          reset: this.reset,
-          error: this.state.error,
-        })
-      : this.props.children;
+    const { panic, error } = this.state;
+    const { fallback, children } = this.props;
+
+    return panic
+      ? fallback({
+        reset: this.reset,
+        error,
+      })
+      : children;
   }
 }
 

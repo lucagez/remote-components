@@ -1,4 +1,6 @@
-import { SCOPE, createScope, createModule, registerModule } from './scopes';
+import {
+  SCOPE, createScope, createModule, registerModule,
+} from './scopes';
 
 /**
  * Contextifying module, exports, require.
@@ -25,7 +27,7 @@ const contextify = (resolution, source, dependencies) => {
    * Therefore, every component can have
    * a completely unique scope with different versions
    * of the same dependency.
-   * 
+   *
    * TODO: register can also be an async function.
    * Therefore, dependecies could potentially be lazy loaded
    */
