@@ -16,7 +16,7 @@ class ErrorBoundary extends React.Component {
       panic: false,
       error: null,
     });
-  };
+  }
 
   static getDerivedStateFromError(error) {
     return {
@@ -32,9 +32,9 @@ class ErrorBoundary extends React.Component {
   render() {
     return this.state.panic
       ? this.props.fallback({
-          reset: this.reset,
-          error: this.state.error,
-        })
+        reset: this.reset,
+        error: this.state.error,
+      })
       : this.props.children;
   }
 }

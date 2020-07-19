@@ -8,15 +8,13 @@
  * - __webpack_require__
  * - parcelRequire
  */
-const createModule = (_exports = {}) => {
-  return {
-    get exports() {
-      return _exports;
-    },
-    set exports(value) {
-      this.exports.default = value;
-    },
-  };
-};
+const createModule = (_exports = {}) => ({
+  get exports() {
+    return _exports;
+  },
+  set exports(value) {
+    this.exports.default = value;
+  },
+});
 
 export { createModule };

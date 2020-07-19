@@ -1,4 +1,5 @@
 /* istanbul ignore file */
+/* eslint-disable */
 
 import inlinedWorker from './module.worker.js';
 

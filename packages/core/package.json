@@ -27,7 +27,9 @@
     "test": "jest",
     "test:watch": "jest --watchAll",
     "test:dev": "run-p watch test:watch",
-    "serve:tests": "serve ./tests"
+    "serve:tests": "serve ./tests",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
@@ -42,6 +44,8 @@
     "@testing-library/react": "^10.0.4",
     "@testing-library/react-hooks": "^3.2.1",
     "babel-plugin-transform-async-to-promises": "^0.8.15",
+    "eslint": "^7.5.0",
+    "eslint-config-airbnb": "^18.2.0",
     "jest": "^26.0.1",
     "jest-puppeteer": "^4.4.0",
     "jsdom-global": "^3.0.2",

@@ -65,9 +65,7 @@ const Remote = ({
       <Provider>
         <ErrorBoundary
           onError={onError}
-          fallback={({ reset, error: fallbackError }) => {
-            return <ErrorComp {...props} reset={reset} error={fallbackError} />;
-          }}
+          fallback={({ reset, error: fallbackError }) => <ErrorComp {...props} reset={reset} error={fallbackError} />}
         >
           <RemoteComp {...props} />
         </ErrorBoundary>
@@ -78,10 +76,10 @@ const Remote = ({
       const Valid = React.isValidElement(Component)
         ? Component
         : React.createElement(Component, {
-            ...props,
-            url,
-            error,
-          });
+          ...props,
+          url,
+          error,
+        });
 
       ReactDOM.render(Valid, ref.current);
     };

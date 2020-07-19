@@ -7,7 +7,7 @@ const url = (path, base, relative = false) => {
   } catch {
     const args = [path, base]
       .filter(Boolean)
-      .map(arg => `'${arg}'`)
+      .map((arg) => `'${arg}'`)
       .join(', ');
 
     throw new Error(`new URL(${args}) is not a valid URL`);
