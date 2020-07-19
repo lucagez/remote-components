@@ -1,4 +1,4 @@
-name: test - @remote-components/core
+name: test - @remote-components/react
 
 on:
   pull_request:
