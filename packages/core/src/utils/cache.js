@@ -13,7 +13,7 @@ const clearCache = async () => {
   const keys = await caches.keys();
   const current = keys.find(key => key === DEFAULT_CACHE_NAME);
 
-  caches.delete(current);
+  return caches.delete(current);
 };
 
 /**
