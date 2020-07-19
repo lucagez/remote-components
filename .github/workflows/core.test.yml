@@ -25,6 +25,12 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: yarn install
     - run: yarn build
-    - run: yarn test
+    - run: yarn test --coverage
       env:
         CI: true
+    - uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        flags: core
+        name: core
+        file: packages/core/coverage/lcov.info

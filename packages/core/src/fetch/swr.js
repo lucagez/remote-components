@@ -1,5 +1,6 @@
 import { DEFAULT_CACHE_NAME } from '../utils/cache';
 import { url as makeUrl } from '../utils/url';
+import { noop } from '../utils/noop';
 
 /**
  * TODO: Add config:
@@ -13,8 +14,8 @@ const swrFetch = async ({
   cacheStrategy = 'none',
   base,
   relative,
-  onDone = () => void 0,
-  onError = () => void 0,
+  onDone = noop,
+  onError = noop,
 }) => {
   const cacheStorage = await caches.open(DEFAULT_CACHE_NAME);
   const cachedResponse = await cacheStorage.match(url);

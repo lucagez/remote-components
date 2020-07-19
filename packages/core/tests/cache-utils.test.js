@@ -9,9 +9,6 @@ const DUMMY_URL = 'http://dummy.com/';
 const DUMMY_RES = `
   module.exports = 'dummy';
 `;
-const DUMMY_RES_A = `
-  module.exports = 'dummy_A';
-`;
 
 global.fetch = jest.fn();
 

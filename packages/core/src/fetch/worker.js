@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import inlinedWorker from './module.worker.js';
 
 /**
