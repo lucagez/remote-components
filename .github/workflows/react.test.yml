@@ -22,8 +22,8 @@ jobs:
     - name: Install @remotes/react dependencies
       run: yarn install
       working-directory: packages/react
-    - run: yarn lint:react
     - run: yarn build
+    - run: yarn lint:react
     - run: yarn test:react
       env:
         CI: true
