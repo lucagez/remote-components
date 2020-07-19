@@ -1,0 +1,29 @@
+name: test - @remote-components/core
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install @remotes/react dependencies
+      run: yarn install
+      working-directory: packages/react
+    - run: yarn build
+    - run: yarn test
+      working-directory: packages/react
+      env:
+        CI: true
