@@ -16,7 +16,7 @@
     "build": "run-p build:*",
     "test": "run-p test:*",
     "lint": "run-p lint:*",
-    "publish": "yarn build && lerna publish",
+    "npm:publish": "yarn build && lerna publish",
     "build:core": "cd packages/core && yarn build",
     "build:react": "cd packages/react && yarn build",
     "test:core": "cd packages/core && yarn test",
