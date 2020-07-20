@@ -1,6 +1,6 @@
 {
   "name": "@remote-components/core",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Core functionality of remote-components",
   "author": "lucagez <lucagesmundo@yahoo.it>",
   "publishConfig": {
