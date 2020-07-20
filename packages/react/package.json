@@ -5,7 +5,7 @@
     "access": "public"
   },
   "description": "Remote components loader",
-  "main": "dist/remote.cjs.js",
+  "main": "dist/remote-react.cjs.js",
   "author": "Luca Gesmundo",
   "license": "MIT",
   "scripts": {
