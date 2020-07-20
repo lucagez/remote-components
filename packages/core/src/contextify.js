@@ -34,6 +34,9 @@ const contextify = (resolution, source, dependencies) => {
   register(dependencies);
   registerModule(resolution, _module.exports);
 
+  /**
+   * TODO: sourceMap shifting
+   */
   return new Function('module', 'exports', 'require', source)(
     _module,
     _module.exports,
