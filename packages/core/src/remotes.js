@@ -1,5 +1,5 @@
 import { registerDependencies, removeModule } from './scopes';
-import { remoteImport, promisify } from './import';
+import { remoteImport, promisifiedImport } from './import';
 import { clearCache, clearEntries } from './utils/cache';
 
 /**
@@ -18,7 +18,7 @@ const remotes = {
   clearEntries,
 
   promise: {
-    import: promisify(remoteImport),
+    import: promisifiedImport,
   },
 };
 

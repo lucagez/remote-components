@@ -9,6 +9,7 @@
   "homepage": "https://github.com/lucagez/remote-components#readme",
   "license": "ISC",
   "main": "dist/remote-core.cjs.js",
+  "types": "index.d.ts",
   "directories": {
     "lib": "src",
     "test": "tests"

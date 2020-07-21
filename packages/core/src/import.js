@@ -65,4 +65,6 @@ const promisify = (_import) => (options) => new Promise((resolve, reject) => {
   });
 });
 
-export { remoteImport, promisify };
+const promisifiedImport = promisify(remoteImport);
+
+export { remoteImport, promisifiedImport };

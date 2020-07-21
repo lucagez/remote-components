@@ -1,9 +1,9 @@
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { remoteImport, promisify } from '../src/import';
+import { promisifiedImport } from '../src/import';
 import { MODULES_SCOPE } from '../src/scopes/modules';
 
-const _import = promisify(remoteImport);
+const _import = promisifiedImport;
 
 const DUMMY_URL = 'http://dummy.com';
 const DUMMY_RES = `
