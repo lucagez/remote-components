@@ -107,7 +107,7 @@ const Remote = ({
       if (typeof RemoteComp !== 'undefined') {
         render(BoundedComp);
       }
-    }, [RemoteComp, loading, error]);
+    }, [RemoteComp, loading, error, props]);
 
     return <div ref={ref} />;
   }
