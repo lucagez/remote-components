@@ -37,7 +37,10 @@ const useRemote = ({
   timeout,
   retries = 1,
 } = {}) => {
-  const [data, setData] = useState({ loading: true });
+  // TODO: => add unmounting callbacks on unmounted components
+  // let flag = false
+
+  const [data, setData] = useState({});
   const [retry, setRetry] = useState(retries);
 
   const onDone = (component) => {
@@ -68,6 +71,10 @@ const useRemote = ({
       onDone,
       onError,
     });
+
+    // return () => {
+    //   flag = true;
+    // };
   }, [retry]);
 
   return data;

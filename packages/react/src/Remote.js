@@ -82,7 +82,7 @@ const Remote = ({
       </Provider>
     );
 
-    const render = (Comp) => {
+    const render = (Comp, container) => {
       const Valid = React.isValidElement(Comp)
         ? Comp
         : React.createElement(Comp, {
@@ -91,22 +91,31 @@ const Remote = ({
           error,
         });
 
-      ReactDOM.render(Valid, ref.current);
+      ReactDOM.render(Valid, container);
     };
 
     useLayoutEffect(() => {
+      const container = document.createElement('div');
+
+      ref.current.appendChild(container);
+
       if (typeof loading !== 'undefined') {
-        render(LoadingComp);
+        render(LoadingComp, container);
       }
 
       if (typeof error !== 'undefined') {
         // TODO: add manual refetch on network errors?
-        render(ErrorComp);
+        render(ErrorComp, container);
       }
 
       if (typeof RemoteComp !== 'undefined') {
-        render(BoundedComp);
+        render(BoundedComp, container);
       }
+
+      return () => {
+        ReactDOM.unmountComponentAtNode(container);
+        container.remove();
+      };
     }, [RemoteComp, loading, error]);
 
     return <div ref={ref} />;

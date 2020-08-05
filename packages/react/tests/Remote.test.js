@@ -1,3 +1,5 @@
+jest.mock('../src/use-remote.js');
+
 import React from 'react';
 import {
   render,
@@ -12,6 +14,7 @@ import { Remote } from '../src/Remote';
 import DUMMY_RES from './mocks/dummy';
 import WRONG_RES from './mocks/wrong';
 import BROKEN_RES from './mocks/broken';
+
 
 registerDependencies({
   react: React,
@@ -38,12 +41,12 @@ beforeEach(() => {
 });
 
 beforeAll(() => {
-  jest.spyOn(console, 'error').mockImplementation(jest.fn());
+  // jest.spyOn(console, 'error').mockImplementation(jest.fn());
   server.listen();
 });
 
 afterAll(() => {
-  jest.spyOn(console, 'error').mockRestore();
+  // jest.spyOn(console, 'error').mockRestore();
   server.close();
 });
 
@@ -60,7 +63,7 @@ test('Should render Loading component', async () => {
 
 test('Should render remote', async () => {
   const Dummy = Remote({
-    url: 'http://dummy.com/component.js',
+    url: 'dummy',
     Loading: () => <h1 data-testid="loading">Loading...</h1>,
   });
 
@@ -68,9 +71,10 @@ test('Should render remote', async () => {
 
   expect(screen.findByText(/Loading/)).toBeTruthy();
 
-  await waitFor(() => {
-    expect(screen.queryByText(/Loading/)).not.toBeInTheDocument();
-  });
+  await waitFor(() => [
+    // expect(screen.queryByText(/Loading/)).not.toBeInTheDocument(),
+    expect(screen.queryByText(/dummy/)).toBeInTheDocument(),
+  ]);
 
   expect(screen.getByText(/dummy/)).toBeTruthy();
 });
@@ -208,7 +212,7 @@ test('Remote should wrap component in Provider', async () => {
   expect.assertions(2);
   
   const Provider = ({ children }) => (
-    <div data-testId="provider">
+    <div data-testid="provider">
       {children}
     </div>
   );

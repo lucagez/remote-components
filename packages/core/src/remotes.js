@@ -22,4 +22,4 @@ const remotes = {
   },
 };
 
-export { remotes };
+export default remotes;
